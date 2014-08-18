@@ -27,36 +27,6 @@ window.utrelogin.callback_registry = {};
     'use strict';
 
     /**
-     * Handy function for logging type; see
-     * http://javascriptweblog.wordpress.com/2011/08/08/fixing-the-javascript-typeof-operator/
-     *
-     * @return {string}
-     */
-    var toType = (function toType(global) {
-        return function(obj) {
-            if (obj === global) {
-                return "global";
-            }
-            return ({}).toString.call(obj).match(/\s([a-z|A-Z]+)/)[1].toLowerCase();
-        }
-    })(window);
-
-
-    /**
-     * Generate a unique, per-call id
-     * @return {string}
-     */
-    var _id = 0;
-    function makeId(prefix)
-    {
-      if (prefix === undefined){
-          prefix = '';
-      }
-      _id += 1;
-      return prefix + _id;
-    }
-
-    /**
      * Regular expression for extracting the base url for the project.
      *
      * @private
@@ -72,23 +42,6 @@ window.utrelogin.callback_registry = {};
      * @type {string}
      */
     var POPUP_OPTIONS = 'toolbar=yes,scrollbars=yes,resizable=yes,dependent=yes,height=500,width=800';
-
-    /**
-     * Function for calculating the login check url.
-     *
-     * @private
-     * @return {string} A server-relative url for acct_lib's login_check.
-     */
-    function getLoginCheckUrl(){
-        var matches = PROJ_BASE_REGEX.exec(window.location.pathname);
-        if (matches){
-            var proj_base = matches[0];
-            return proj_base + 'acct_lib/nlogon/login_check/';
-        }
-        else{
-            return null;
-        }
-    }
 
     /** Function for calculating the login redirect url.
      * @private
@@ -108,28 +61,6 @@ window.utrelogin.callback_registry = {};
         else{
             return null;
         }
-    }
-
-    var LOGIN_CHECK_URL = getLoginCheckUrl();
-
-
-    /**
-     * Make an ajax call to check whether login is required.
-     *
-     * @return {boolean} whether login is required
-     */
-    function loginRequired(){
-        var required = false; // default to false
-        var response = undefined;
-        var x = new XMLHttpRequest();
-        x.open("GET", getLoginCheckUrl(), false);
-        x.send();
-        if (x.readyState == 4 && x.status == 200){
-            response = JSON.parse(x.responseText);
-            required = response.login_required;
-        }
-        console.info('login required: ' + required);
-        return required;
     }
 
     /**
