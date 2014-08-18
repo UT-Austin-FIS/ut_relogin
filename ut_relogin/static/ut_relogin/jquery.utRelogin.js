@@ -150,6 +150,11 @@ window.utrelogin.callback_registry = {};
         XMLHttpRequest.prototype.send = new_send;
     }
 
+    utRelogin.prototype.retryLastCall = function () {
+        // TODO: can we retry a call?
+        alert('resuming!');
+    }
+
     $.utRelogin = utRelogin;
     return utRelogin;
   },
