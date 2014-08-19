@@ -3,10 +3,6 @@ ut_relogin
 
 Catches failed AJAX requests under UTLogin when a user is logged out, allowing them to login again.
 
-Overview
-========
-...
-
 Usage
 =====
 
@@ -53,3 +49,19 @@ Setup
       )
 
       ```
+
+Explanation
+===========
+Before the transition to [UTLogin](http://www.utexas.edu/its/utlogin/), under
+[Central Web Authentication](http://www.utexas.edu/its/utlogin/Compare%20to%20CWA),
+AJAX requests that were sent with an invalid session received 200-status
+responses from the CWA machinery. Despite being a "success" in HTTP terms,
+these responses could be inspected for clues indicating that they in fact
+came from failed authentication, instead of containing the intented data.
+
+Under UTLogin, however, requests with expired sessions are redirected to a
+central server, login.utexas.edu, which the browser cannot follow because of
+the same origin policy. The browser can't send the original request to
+login.utexas.edu, so it reports the attempt as a failure.
+
+...
