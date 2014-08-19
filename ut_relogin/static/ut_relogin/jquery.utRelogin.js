@@ -51,7 +51,11 @@ window.utrelogin.callback_registry = {};
      * @private
      */
     function log(msg) {
-        console.info('==> jQuery.utRelogin --> ' + msg);
+        var d = new Date();
+        var dString = d.getHours() + ':' +
+                      d.getMinutes() + ':' +
+                      d.getSeconds() + '.' + d.getMilliseconds();
+        console.info('==> [' + dString + '] jQuery.utRelogin --> ' + msg);
     }
 
     /** Function for calculating the login redirect url.
