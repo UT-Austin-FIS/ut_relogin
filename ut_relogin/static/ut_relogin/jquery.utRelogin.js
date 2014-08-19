@@ -102,7 +102,7 @@ window.utrelogin.callback_registry = {};
             this._async = async;
             this._same_origin_error = null;
             this._current_error = undefined;
-            this.addEventListener('error', handleAsyncError, true);
+            this.addEventListener('error', handleAsyncError, false);
             log('calling original XMLHttpRequest.open');
             xhr_open.call(this, method, url, async, user, pass);
         }
