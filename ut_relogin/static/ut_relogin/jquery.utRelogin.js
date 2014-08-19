@@ -92,11 +92,16 @@ window.utrelogin.callback_registry = {};
             window.open(redirect_url, null, POPUP_OPTIONS);
         }
 
+        function handleAsyncError() {
+            log('handling async error...');
+        }
+
         function new_open(method, url, async, user, pass){
             this._open_args = arguments;
             this._async = async;
             this._same_origin_error = null;
             this._current_error = undefined;
+            this.addEventListener('error', handleAsyncError, false);
             log('calling original XMLHttpRequest.open');
             xhr_open.call(this, method, url, async, user, pass);
         }
