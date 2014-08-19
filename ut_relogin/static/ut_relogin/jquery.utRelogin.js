@@ -47,13 +47,8 @@ window.utrelogin.callback_registry = {};
      * @private
      * @return {string} A server-relative url for acct_lib's login_redirect.
      */
-    function getLoginRedirectUrl(callback_id){
+    function getLoginRedirectUrl() {
         var matches = PROJ_BASE_REGEX.exec(window.location.pathname);
-        var qs = '?cb=' + encodeURIComponent(callback_id);
-        var use_cb = $('#run_callback').prop('checked'); // todo: REMOVE - TEMPTEMPTEMP
-        if(!use_cb){
-            qs = '';
-        }
         if (matches){
             var proj_base = matches[0];
             return proj_base + 'acct_lib/login_redirect/' + qs;
@@ -100,13 +95,13 @@ window.utrelogin.callback_registry = {};
                 }
 
                 function state_change(){
-                    console.info("readyState: " + self.readyState
-                                 + " status: " + self.status);
+                    console.info("readyState: " + self.readyState +
+                                 " status: " + self.status);
 
-                    if (self.readyState == 4){
+                    if (self.readyState === 4){
                         sc_complete = true;
 
-                        if (self.status == 0){
+                        if (self.status === 0){
                             self._same_origin_error = true;
                             console.info('SOE: ' + self._same_origin_error); // TODO: Remove
                         }
@@ -153,7 +148,7 @@ window.utrelogin.callback_registry = {};
     utRelogin.prototype.retryLastCall = function () {
         // TODO: can we retry a call?
         alert('resuming!');
-    }
+    };
 
     $.utRelogin = utRelogin;
     return utRelogin;
