@@ -21,6 +21,8 @@ Setup
 
 1. Add "`ut_relogin`" to your `INSTALLED_APPS` setting:
       ```python
+      # settings.py
+      # ...
       INSTALLED_APPS = (
           # ...
           'ut_relogin',
@@ -30,9 +32,24 @@ Setup
 
 1. Add the `ut_relogin` middleware to your `MIDDLEWARE_CLASSES` setting:
       ```python
+      # settings.py
+      # ...
       MIDDLEWARE_CLASSES = (
           # ...
           'ut_relogin.middleware.UtReloginHeadTagMiddleware',
           # ...
       )
+      ```
+
+1. Add the URLs for `ut_relogin`:
+      ```python
+      # urls.py
+      # ...
+      import ut_relogin.urls
+
+      urlpatterns = (
+          # ...
+          url(r'^', include(ut_relogin.urls)),
+      )
+
       ```
