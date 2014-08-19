@@ -141,7 +141,7 @@ window.utrelogin.callback_registry = {};
                 this.onreadystatechange = scc;
             }
             try {
-                log('calling original XMLHttpRequest.open');
+                log('calling original XMLHttpRequest.send');
                 xhr_send.call(this, data);
             } catch(err) {
                 // we need to defer action on this -- if it is a same origin error,
