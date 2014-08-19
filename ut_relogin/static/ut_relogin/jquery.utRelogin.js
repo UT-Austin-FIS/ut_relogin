@@ -51,7 +51,7 @@ window.utrelogin.callback_registry = {};
         var matches = PROJ_BASE_REGEX.exec(window.location.pathname);
         if (matches){
             var proj_base = matches[0];
-            return proj_base + 'acct_lib/login_redirect/' + qs;
+            return proj_base + 'acct_lib/login_redirect/';
         }
         else{
             return null;
