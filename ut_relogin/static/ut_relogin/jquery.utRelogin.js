@@ -115,6 +115,7 @@ window.utrelogin.callback_registry = {};
                     log('readyState: ' + self.readyState + '; status: ' + self.status);
 
                     if (self.readyState === 4){
+                        log('state changes are complete');
                         sc_complete = true;
 
                         if (self.status === 0){
@@ -128,8 +129,8 @@ window.utrelogin.callback_registry = {};
                         log('aborting request');
                         self.abort();
                         startLogin();
-                    }
-                    else{
+                    } else {
+                        log('calling old onreadystatechange handler');
                         old.call(self);
                     }
                 }
@@ -138,18 +139,21 @@ window.utrelogin.callback_registry = {};
 
             this._data = data;
             if (this._async){
+                log('adding onreadystatechange function');
                 this.onreadystatechange = scc;
             }
             try {
                 log('calling original XMLHttpRequest.send');
                 xhr_send.call(this, data);
             } catch(err) {
+                log('caught an error');
                 // we need to defer action on this -- if it is a same origin error,
                 // we can ignore it if login is triggered.
                 this._current_error = err;
             } finally {
                 // firefox doesn't fire on synchronous calls, but we need scc called
                 if (!(this._async || sc_complete)){
+                    log('request is not async OR state change is not complete');
                     no_call = true; // because user code
                     scc();
                 }
@@ -157,7 +161,6 @@ window.utrelogin.callback_registry = {};
             }
         }
 
-        log('replacing XMLHttpRequest.open and .send');
         XMLHttpRequest.prototype.open = new_open;
         XMLHttpRequest.prototype.send = new_send;
     }
