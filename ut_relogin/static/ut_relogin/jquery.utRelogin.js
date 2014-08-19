@@ -93,7 +93,8 @@ window.utrelogin.callback_registry = {};
         }
 
         function handleAsyncError() {
-            log('handling async error...');
+            log('handling async error');
+            startLogin();
         }
 
         function new_open(method, url, async, user, pass){
