@@ -43,6 +43,17 @@ window.utrelogin.callback_registry = {};
      */
     var POPUP_OPTIONS = 'toolbar=yes,scrollbars=yes,resizable=yes,dependent=yes,height=500,width=800';
 
+    /**
+     * Log messages consistently.
+     *
+     * @param {String} msg
+     *     Message to log
+     * @private
+     */
+    function log(msg) {
+        console.info('==> jQuery.utRelogin --> ' + msg);
+    }
+
     /** Function for calculating the login redirect url.
      * @private
      * @return {string} A server-relative url for acct_lib's login_redirect.
@@ -73,6 +84,7 @@ window.utrelogin.callback_registry = {};
 
         function startLogin(){
             var redirect_url = getLoginRedirectUrl();
+            log('opening login window');
             window.open(redirect_url, null, POPUP_OPTIONS);
         }
 
@@ -81,6 +93,7 @@ window.utrelogin.callback_registry = {};
             this._async = async;
             this._same_origin_error = null;
             this._current_error = undefined;
+            log('calling original XMLHttpRequest.open');
             xhr_open.call(this, method, url, async, user, pass);
         }
 
@@ -95,20 +108,20 @@ window.utrelogin.callback_registry = {};
                 }
 
                 function state_change(){
-                    console.info("readyState: " + self.readyState +
-                                 " status: " + self.status);
+                    log('readyState: ' + self.readyState + '; status: ' + self.status);
 
                     if (self.readyState === 4){
                         sc_complete = true;
 
                         if (self.status === 0){
                             self._same_origin_error = true;
-                            console.info('SOE: ' + self._same_origin_error); // TODO: Remove
+                            log('SOE: ' + self._same_origin_error);
                         }
                     }
 
                     if (self._same_origin_error){
                         delete self._current_error; // we can assume this was the error
+                        log('aborting request');
                         self.abort();
                         startLogin();
                     }
@@ -123,15 +136,14 @@ window.utrelogin.callback_registry = {};
             if (this._async){
                 this.onreadystatechange = scc;
             }
-            try{
+            try {
+                log('calling original XMLHttpRequest.open');
                 xhr_send.call(this, data);
-            }
-            catch(err){
+            } catch(err) {
                 // we need to defer action on this -- if it is a same origin error,
                 // we can ignore it if login is triggered.
                 this._current_error = err;
-            }
-            finally{
+            } finally {
                 // firefox doesn't fire on synchronous calls, but we need scc called
                 if (!(this._async || sc_complete)){
                     no_call = true; // because user code
@@ -141,6 +153,7 @@ window.utrelogin.callback_registry = {};
             }
         }
 
+        log('replacing XMLHttpRequest.open and .send');
         XMLHttpRequest.prototype.open = new_open;
         XMLHttpRequest.prototype.send = new_send;
     }
