@@ -77,9 +77,11 @@ header to see if it's pointing at the UTLogin host.
 
 In the old CWA system, every host implemented the same login page. Thus,
 whenever a user's session expired, or they logged out, any further requests
-would be redirected to a path *on the same host* where the user could login
+would be redirected to a path **on the same host** where the user could login
 again and get new cookies. The login form would redirect them back to their
-original location, ~~but without any of the original request body~~ (?).
+original location via a GET; any POST data would be lost, and the destination
+page would be responsible for dealing with the unexpected GET from the logon
+form.
 
 There is an older version of `ut_relogin` that would intercept form submissions
 and AJAX requests when the response from the host was the login page. It would
