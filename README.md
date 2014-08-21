@@ -63,77 +63,81 @@ Before the transition to [UTLogin](http://www.utexas.edu/its/utlogin/), under
 responses from the CWA machinery. Despite being a "success" in HTTP terms,
 these responses could be inspected for clues indicating that they in fact
 came from failed authentication, instead of containing the intended data.
+FIS has a jQuery plugin called `utRelogin` that did just that.
 
 Under UTLogin, however, requests with expired sessions are redirected to a
 central server on a different subdomain, which the browser cannot follow
 because of its
 [same-origin policy](http://en.wikipedia.org/wiki/Same-origin_policy). The
 browser can't send the original request to this host, so it reports the attempt
-as a failure.  Because the browser handles the original redirect response,
+as a failure. Because the browser handles the original redirect response,
 there is no way to inspect it from JavaScript code, say to inspect the Location
 header to see if it's pointing at the UTLogin host.
+
+This project attempts to provide consistent user experience in apps using the
+old `utRelogin` by detecting expired sessions and giving the user a login
+window.
 
 ## The Old Way: Central Web Authentication
 
 In the old CWA system, every host implemented the same login page. Thus,
-whenever a user's session expired, or they logged out, any further requests
-would be redirected to a path **on the same host** where the user could login
-again and get new cookies. The login form would redirect them back to their
-original location via a GET; any POST data would be lost, and the destination
-page would be responsible for dealing with the unexpected GET from the logon
-form.
+whenever the user's session became invalid, either because it expired or they
+logged out, any further requests would be redirected to a path **on the same
+host** where the user could login again and get new cookies. The login form
+would redirect them back to their original location via a GET; any POST data
+would be lost, and the destination page would be responsible for dealing with
+the unexpected GET from the logon form.
 
-There is an older version of `ut_relogin` that would intercept form submissions
-and AJAX requests when the response from the host was the login page. It would
-put up a jQuery modal with the login page, let the user enter their
-credentials, and then close and re-submit the original request. This doesn't
-work under UTLogin.
+The older `utRelogin` plugin would intercept form submissions and AJAX requests
+when the response from the host was the login page. It would put up a jQuery
+modal with the login page, let the user enter their credentials, and then close
+the modal and re-submit the original request. This no longer works under
+UTLogin for reasons discussed in the next section.
 
 ## The New Way: UTLogin
 
-There are two major differences in behavior under UTLogin:
+There are two relevant, major differences in behavior under UTLogin:
 * All login pages are served from a single host; while every host under UTLogin
   has something installed to connect it to UTLogin, the only place that users
   will be getting login pages is from the central UTLogin host.
-* The login page doesn't allow itself to be embedded in an iframe
-  (`X-Frame-Options: Deny`).
+* The login page doesn't allow itself to be embedded in an iframe, due to its
+  `X-Frame-Options: Deny` HTTP header.
 
-This project attempts to provide consistent user experiernce by detecting
-expired sessions and giving the user a login window.
+Any request made on a host under UTLogin passes through the UTLogin agent
+software. If a valid session is detected, the request is passed along
+like normal. If the session is not valid, the agent software will redirect
+the user to the central UTLogin server. This happens both when the user
+makes their first request to a new host after logging in, and when their
+session has become invalid.
 
-### First request after login
-After a user logs in to UTLogin, they will be forwarded to their intended
-destination.
+### Plain GET/POST
 
-#### Plain GET/POST
-The first request for a resource on a given host is redirected to the UTLogin
-host, which checks the user's credentials and automatically POSTs a form with
-the credentials back to the original host. The agent on the intended server
-grabs the credentials from the POST body, sets a cookie, and redirects the user
-to their original destination. POST and GET data are retained.
+When the user requests a resource without a valid session, the agent software
+on that host intervenes and sends back a redirect to the central UTLogin
+server. The user then enters their credentials and submits the form. If the
+credentials are valid, UTLogin issues a POST back to the original resource. The
+agent on the original host grabs the credentials from the POST body, sets a
+cookie, and redirects the user to their original destination, using the
+original HTTP verb and POST or GET data.
 
-#### AJAX
-Although most users will have already done a normal request to a host to get
-the JavaScript code that does AJAX requests, it's possible that the first
-request to a host after login in is an AJAX request. For example, a user
-could have two windows open with resources from two different UTLogin servers.
-Say their session expires and they re-authenticate on host A; if they switch
-to their host B window and take an action on the still-loaded page that
-triggers an AJAX request, that request will fail. The UTLogin machinery will
-redirect the request to the login host, which is a cross-domain request that
-the browser will prohibit.
+### AJAX
+
+If an application attempts to make an AJAX request after the user's session
+expires, the UTLogin machinery will redirect the request to the login host,
+which is a cross-domain request that the browser will prohibit.
+
+Similarly, although most users will have already done a normal request to the
+host to get the JavaScript code that does AJAX requests, it's also possible
+that the first request to a host **after** login in is an AJAX request. For
+example, the user could have two windows open with resources from two different
+UTLogin servers. Say their session expires and they re-authenticate on host A;
+if they switch to their host B window and take an action on the still-loaded
+page that triggers an AJAX request, that request will fail, since the redirect
+cycle still needs to happen on host B.
 
 `ut_relogin` addresses this situation by giving the user a new login window
-that redirects to host B. If the user already has a valid session and only
-needs to go through the UTLogin redirect cycle, the window that opens will
-accomplish that. Then, the user can redo their action that triggered the
-AJAX call, which will now behave normally.
-
-### While logged in
-#### Plain GET/POST
-#### AJAX
-
-### All requests after logout / session expiration
-#### Plain GET/POST
-#### AJAX
-
+that redirects to host B after login. If the user already has a valid session
+and only needs to go through the UTLogin redirect cycle, the window that opens
+will accomplish that. Otherwise, they will be prompted to enter their
+credentials on the normal UTLogin page. Then, the user can redo their action
+that triggered the AJAX call, which will now behave normally.
