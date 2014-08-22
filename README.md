@@ -5,8 +5,8 @@ Catches failed AJAX requests for resources under UTLogin where there failure is
 due to an expired session, allowing the user to login again to retry the action
 that triggered the original AJAX request.
 
-Setup
-=====
+Setup - PyPE/Django
+===================
 
 To include this app in your PyPE project, simply pull it into your project via
 `svn:externals` and place it on your `PYTHONPATH`. For example, if you're using
@@ -53,6 +53,41 @@ Then, install it into your Django project:
       )
 
       ```
+
+Setup - non-Django
+==================
+
+The resources in this repo can be used in any context. Essentially, this
+project is an "app-ification" of the `jquery.utRelogin.js` plugin that was done
+to make it easier to reliably inject it into existing Django apps.
+
+If you look at the middleware in `ut_relogin/middleware.py`, you'll see the
+`<script>` tags necessary to add this plugin to your own web application in
+whatever language (webAgent, PHP, Java, etc.).
+
+Ideally, you'd include this repo with `svn:externals` if you're using Subversion,
+or perhaps with subtree merges if you're using git. If you're adding `ut_relogin`
+to a webAgent application, you'll just want to download a tagged version of the
+relevant JavaScript files and add them to your source directory.
+
+If you can get the two source files and the calling script into your
+application, you're all set up. See `middleware.py` to be sure, but here's what
+that looks like:
+
+```html
+<head>
+  <!-- ... -->
+
+  <script src="url/to/your/copy/of/jquery-1.11.1.min.js"></script>
+  <script src="url/to/your/copy/of/jquery.utRelogin.js"></script>
+  <script>
+    var $jqUtRelogin = jQuery.noConflict(true);
+    $jqUtRelogin.utRelogin();
+  </script>
+
+  <!-- ... -->
+</head>
+```
 
 Explanation
 ===========
