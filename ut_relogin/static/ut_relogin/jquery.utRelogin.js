@@ -41,7 +41,8 @@ window.utrelogin.callback_registry = {};
      * @const
      * @type {string}
      */
-    var POPUP_OPTIONS = 'toolbar=yes,scrollbars=yes,resizable=yes,dependent=yes,height=500,width=800';
+    var POPUP_OPTIONS = 'toolbar=yes,scrollbars=yes,resizable=yes,' +
+                        'dependent=yes,height=500,width=800';
 
     /**
      * Log messages consistently.
@@ -67,8 +68,7 @@ window.utrelogin.callback_registry = {};
         if (matches){
             var proj_base = matches[0];
             return proj_base + 'ut_relogin/redirect/';
-        }
-        else{
+        } else {
             return null;
         }
     }
@@ -94,6 +94,8 @@ window.utrelogin.callback_registry = {};
 
         function handleAsyncError() {
             log('handling async error');
+            log('aborting async request');
+            this.abort();
             startLogin();
         }
 
