@@ -98,7 +98,7 @@ The configuration options you can pass to $.utRelogin are the following:
 
 * `redirectUrl`
   * the URL to open in the login window, to which UTLogin will redirect the
-    user after login.
+    user after login
   * *default*: `'/'`
 * `popupOptions`
   * options to pass to `window.open()` for controlling the login browser window
