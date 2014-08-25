@@ -1,18 +1,30 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Relogin successful</title>
-        <script>
-            if (window.opener != null) {
-                //window.opener.$jqUtRelogin.utRelogin.retryLastCall();
-                //window.close();
-            }
-        </script>
-    </head>
-    <body>
-        <p>
-            You have successfully logged back in. Please close this page and
-            retry your last action.
-        </p>
-    </body>
-</html>
+{{ utd_header }}
+{% block relogin_content %}
+  <div id="summary">
+    <h2>You have been successfully logged in.<h2>
+  </div>
+  <div id="info">
+    <p>{{ msg }}</p>
+    <p>This window will close automatically in <span id="countdown"></span> seconds.</p>
+  </div>
+
+  <script type="text/javascript">
+    (function () {
+      var timeLeft = 7,
+          cinterval;
+
+      var timeDec = function (){
+          timeLeft--;
+          document.getElementById('countdown').innerHTML = timeLeft;
+          if(timeLeft === 0){
+              clearInterval(cinterval);
+              window.close();
+          }
+      };
+
+      cinterval = setInterval(timeDec, 1000);
+    })();
+  </script>
+
+{% endblock relogin_content %}
+{{ utd_footer }}
