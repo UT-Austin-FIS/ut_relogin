@@ -92,6 +92,18 @@ Here's what it should look like:
 </head>
 ```
 
+Options
+=======
+The configuration options you can pass to $.utRelogin are the following:
+
+* `redirectUrl`
+  * default: `'/'`
+  * purpose: The URL to open in the login window, to which UTLogin will
+             redirect the user after login.
+* `popupOptions`
+  * default: `'toolbar=yes,scrollbars=yes,resizable=yes,dependent=yes,height=500,width=800'`
+  * purpose: options to pass to `window.open()` for opening the login window
+
 Explanation
 ===========
 
