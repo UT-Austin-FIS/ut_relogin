@@ -27,13 +27,12 @@ window.utrelogin.callback_registry = {};
     'use strict';
 
     /**
-     * Regular expression for extracting the base url for the project.
+     * Redirect URL, to be defined by configOptions
      *
      * @private
-     * @const
-     * @type {RegExp}
+     * @type {string}
      */
-    var PROJ_BASE_REGEX = /^\/apps\/[^\/]+\/[^\/]+\//;
+    var REDIRECT_URL = '/';
 
     /**
      * Login popup window options
@@ -56,37 +55,28 @@ window.utrelogin.callback_registry = {};
         console.info('==> [' + logTime + '] (jQuery.utRelogin) --> ' + msg);
     }
 
-    /** Function for calculating the login redirect url.
-     * @private
-     * @return {string} A server-relative url for acct_lib's login_redirect.
-     */
-    function getLoginRedirectUrl() {
-        var matches = PROJ_BASE_REGEX.exec(window.location.pathname);
-        if (matches){
-            var proj_base = matches[0];
-            return proj_base + 'ut_relogin/redirect/';
-        } else {
-            return null;
-        }
-    }
-
     /**
      * Main function of the module. Call this to set it up.
      *
      * @public
      * @param {Object} configOptions
-     *     Historical. ConfigOptions are ignored.
+     *     Configuration options
      *
      * @returns {void}
      */
     function utRelogin(configOptions) {
+        if (configOptions !== null) {
+            if (configOptions.hasOwnProperty('redirectUrl')) {
+                REDIRECT_URL = configOptions.redirectUrl;
+            }
+        }
+
         var xhr_open = XMLHttpRequest.prototype.open;
         var xhr_send = XMLHttpRequest.prototype.send;
 
         function startLogin(){
-            var redirect_url = getLoginRedirectUrl();
             log('opening login window');
-            window.open(redirect_url, null, POPUP_OPTIONS);
+            window.open(REDIRECT_URL, null, POPUP_OPTIONS);
         }
 
         function handleAsyncError(event) {

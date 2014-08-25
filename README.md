@@ -70,9 +70,12 @@ or perhaps with subtree merges if you're using git. If you're adding `ut_relogin
 to a webAgent application, you'll just want to download a tagged version of the
 relevant JavaScript files and add them to your source directory.
 
-If you can get the two source files and the calling script into your
-application, you're all set up. See `middleware.py` to be sure, but here's what
-that looks like:
+In addition to getting the two source files and the calling script into your
+application, you will probably also want to create a web page to have UTLogin
+redirect your users to. The URL to this webpage will need to be provided as a
+configuration option to `ut_relogin`.
+
+Here's what it should look like:
 
 ```html
 <head>
@@ -82,7 +85,7 @@ that looks like:
   <script src="url/to/your/copy/of/jquery.utRelogin.js"></script>
   <script>
     var $jqUtRelogin = jQuery.noConflict(true);
-    $jqUtRelogin.utRelogin();
+    $jqUtRelogin.utRelogin({'redirectUrl': 'url/to/your/redirect/page.html'});
   </script>
 
   <!-- ... -->

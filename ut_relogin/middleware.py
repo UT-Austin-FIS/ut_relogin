@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.urlresolvers import reverse
 
 TAGS = """
 <head>
@@ -6,7 +7,7 @@ TAGS = """
     <script src="{static_url}ut_relogin/jquery.utRelogin.js"></script>
     <script>
         var $jqUtRelogin = jQuery.noConflict(true);
-        $jqUtRelogin.utRelogin();
+        $jqUtRelogin.utRelogin({{'redirectUrl': '{redirect_url}'}});
     </script>
 """
 
@@ -15,6 +16,9 @@ class UtReloginHeadTagMiddleware(object):
 
     def process_response(self, request, response):
         if 'html' in response['Content-Type'].lower():
-            tags = TAGS.format(static_url=settings.STATIC_URL)
+            tags = TAGS.format(
+                static_url=settings.STATIC_URL,
+                redirect_url=reverse('ut_relogin_redirect'),
+            )
             response.content = response.content.replace(u'<head>', tags, 1)
         return response
