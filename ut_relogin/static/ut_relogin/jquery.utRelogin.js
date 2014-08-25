@@ -60,7 +60,10 @@ window.utrelogin.callback_registry = {};
      * @returns {void}
      */
     function utRelogin(configOptions) {
-        var opts = $.extend(defaultOptions, configOptions);
+        if (typeof configOptions !== 'object') {
+            configOptions = {};
+        }
+        var opts = $.extend({}, defaultOptions, configOptions);
 
         var xhr_open = XMLHttpRequest.prototype.open;
         var xhr_send = XMLHttpRequest.prototype.send;
