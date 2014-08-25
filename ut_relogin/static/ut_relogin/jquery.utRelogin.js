@@ -27,21 +27,16 @@ window.utrelogin.callback_registry = {};
     'use strict';
 
     /**
-     * Redirect URL, to be defined by configOptions
+     * utRelogin options and default values
      *
      * @private
-     * @type {string}
+     * @type {object}
      */
-    var REDIRECT_URL = '/';
-
-    /**
-     * Login popup window options
-     * @private
-     * @const
-     * @type {string}
-     */
-    var POPUP_OPTIONS = 'toolbar=yes,scrollbars=yes,resizable=yes,' +
-                        'dependent=yes,height=500,width=800';
+    var defaultOptions = {
+        'redirectUrl': '/',
+        'popupOptions': 'toolbar=yes,scrollbars=yes,resizable=yes,' +
+                        'dependent=yes,height=500,width=800',
+    };
 
     /**
      * Log messages consistently.
@@ -65,18 +60,14 @@ window.utrelogin.callback_registry = {};
      * @returns {void}
      */
     function utRelogin(configOptions) {
-        if (configOptions !== null) {
-            if (configOptions.hasOwnProperty('redirectUrl')) {
-                REDIRECT_URL = configOptions.redirectUrl;
-            }
-        }
+        var opts = $.extend(defaultOptions, configOptions);
 
         var xhr_open = XMLHttpRequest.prototype.open;
         var xhr_send = XMLHttpRequest.prototype.send;
 
         function startLogin(){
             log('opening login window');
-            window.open(REDIRECT_URL, null, POPUP_OPTIONS);
+            window.open(opts.redirectUrl, null, opts.popupOptions);
         }
 
         function handleAsyncError(event) {
