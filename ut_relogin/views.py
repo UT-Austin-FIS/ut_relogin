@@ -31,5 +31,4 @@ class ReloginRedirect(TemplateView):
             title='UT Relogin Success',
             page_title='UT Relogin Success',
             window_title='UT Relogin Success',
-            api_key='8B54A49X54',
             )
