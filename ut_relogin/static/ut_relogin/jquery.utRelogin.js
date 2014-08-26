@@ -122,18 +122,29 @@ window.utrelogin.callback_registry = {};
             if (this._async){
                 log('adding onreadystatechange function');
                 this.onreadystatechange = scc;
+
                 // jQuery will modify onreadystatechange after calling our
                 // new_send function; let's intercept that modification so we
                 // don't get overriden
-                var orsc = this.onreadystatechange;
+                // NOTE: This won't work in IE 8, since it's only implemented
+                // for DOM objects there.
+                var orsc = new Array();
                 Object.defineProperty(this, "onreadystatechange", {
-                    enumerable: true,
-                    configurable: true,
-                    get: function(){ return orsc; },
-                    set: function(newValue){
-                        console.info('setting onreadystatechange...');
-                        console.info(newValue);
-                        orsc = newValue;
+                    configurable: false,
+                    enumerable: false,
+                    get: function () {
+                        return function () {
+                            for (var i=0; i<orsc.length; i++) {
+                                log('calling onreadystatechange #' + i);
+                                log(orsc[i]);
+                                orsc[i].call(self);
+                            }
+                        };
+                    },
+                    set: function (newValue) {
+                        log('setting onreadystatechange...');
+                        log(newValue);
+                        orsc.push(newValue);
                     },
                 });
             }
