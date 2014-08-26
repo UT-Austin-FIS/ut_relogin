@@ -8,7 +8,7 @@ try:
     context = getattr(module, ctx_class)
 except AttributeError:
     raise ImproperlyConfigured(
-        'You must supply a path your own context object by setting a '
+        'You must supply a path your own RequestContext class by setting a '
         'UT_RELOGIN_CONTEXT in your settings.py file.'
     )
 
