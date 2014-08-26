@@ -21,15 +21,16 @@ Then, install it into your Django project:
 
 1. Modify your project settings
   1. Add "`ut_relogin`" to your `INSTALLED_APPS` setting:
-        ```python
-        # settings.py
-        # ...
-        INSTALLED_APPS = (
-            # ...
-            'ut_relogin',
-            # ...
-        )
-        ```
+      ```python
+      # settings.py
+      # ...
+      INSTALLED_APPS = (
+          # ...
+          'ut_relogin',
+          # ...
+      )
+      ```
+
   1. Add the middleware to your `MIDDLEWARE_CLASSES` setting:
         ```python
         # settings.py
@@ -40,6 +41,7 @@ Then, install it into your Django project:
             # ...
         )
         ```
+
   1. Tell `ut_relogin` what context class and message to use:
         ```python
         # settings.py
