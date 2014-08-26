@@ -135,6 +135,20 @@ window.utrelogin.callback_registry = {};
             if (this._async){
                 log('adding onreadystatechange function');
                 this.onreadystatechange = scc;
+                // jQuery will modify onreadystatechange after calling our
+                // new_send function; let's intercept that modification so we
+                // don't get overriden
+                var orsc = this.onreadystatechange;
+                Object.defineProperty(this, "onreadystatechange", {
+                    enumerable: true,
+                    configurable: true,
+                    get: function(){ return orsc; },
+                    set: function(newValue){
+                        console.info('setting onreadystatechange...');
+                        console.info(newValue);
+                        orsc = newValue;
+                    },
+                });
             }
             try {
                 log('calling original XMLHttpRequest.send');
