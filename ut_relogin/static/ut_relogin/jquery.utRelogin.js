@@ -39,6 +39,11 @@ window.utrelogin.callback_registry = {};
     };
 
     /**
+     * Whether to show log messages in the console.
+     */
+    var showLog = /local\.utexas\.edu$/.test(window.location.hostname);
+
+    /**
      * Log messages consistently.
      *
      * @param {String} msg
@@ -46,6 +51,9 @@ window.utrelogin.callback_registry = {};
      * @private
      */
     function log(msg) {
+        if (!showLog) {
+            return;
+        }
         var logTime = new Date().getTime();
         console.info('==> [' + logTime + '] (jQuery.utRelogin) --> ' + msg);
     }
@@ -127,20 +135,27 @@ window.utrelogin.callback_registry = {};
 
                 // jQuery will modify onreadystatechange after calling our
                 // new_send function; let's intercept that modification so we
-                // don't get overriden.
+                // don't get completely overridden.
+                //
                 // NOTE: This won't work in IE 8, since defineProperty is only
                 // implemented for DOM objects there.
                 Object.defineProperty(this, "onreadystatechange", {
                     configurable: false,
                     enumerable: false,
                     get: function () {
+                        // It seems that this doesn't actually get called,
+                        // perhaps since the native XMLHttpRequest.send does
+                        // some fancy native code thing?
+                        //
+                        // Let's return something just in case.
                         log('getting onreadystatechange...');
-                        // this doesn't get called, since we're invoking a function?
                         return scc;
                     },
                     set: function (newValue) {
+                        // Instead of overwriting our handler, let's overwrite
+                        // the other handler that we'll call after doing our
+                        // thing.
                         log('changing other onreadystatechange function...');
-                        console.info(newValue);
                         otherOrscHandler = newValue;
                     },
                 });
