@@ -83,16 +83,15 @@ window.utrelogin.callback_registry = {};
         }
 
         function new_send(data){
-            var orsc = new Array();
+            var otherOrscHandler;
             var scc =  state_change_closure(this, this.onreadystatechange);
             var no_call = false; // used by state_change to decide whether to call old.
             var sc_complete = false;
 
             function state_change_closure(self, old){
-                if (!old){
-                    old = function(){};
+                if (old){
+                    otherOrscHandler = old;
                 }
-                orsc.push(old);
 
                 function state_change(){
                     log('readyState: ' + self.readyState + '; status: ' + self.status);
@@ -113,11 +112,8 @@ window.utrelogin.callback_registry = {};
                         self.abort();
                         startLogin();
                     } else {
-                        log('calling old onreadystatechange handlers...');
-                        for (var i = 0; i < orsc.length; i++) {
-                            log('... #' + i);
-                            orsc[i].call(self);
-                        }
+                        log('calling old onreadystatechange handler...');
+                        otherOrscHandler.call(self);
                     }
                 }
                 return state_change;
@@ -130,9 +126,9 @@ window.utrelogin.callback_registry = {};
 
                 // jQuery will modify onreadystatechange after calling our
                 // new_send function; let's intercept that modification so we
-                // don't get overriden
-                // NOTE: This won't work in IE 8, since it's only implemented
-                // for DOM objects there.
+                // don't get overriden.
+                // NOTE: This won't work in IE 8, since defineProperty is only
+                // implemented for DOM objects there.
                 Object.defineProperty(this, "onreadystatechange", {
                     configurable: false,
                     enumerable: false,
@@ -142,9 +138,9 @@ window.utrelogin.callback_registry = {};
                         return scc;
                     },
                     set: function (newValue) {
-                        log('adding an onreadystatechange function...');
+                        log('changing other onreadystatechange function...');
                         console.info(newValue);
-                        orsc.push(newValue);
+                        otherOrscHandler = newValue;
                     },
                 });
             }
