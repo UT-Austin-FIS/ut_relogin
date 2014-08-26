@@ -89,9 +89,10 @@ window.utrelogin.callback_registry = {};
             var sc_complete = false;
 
             function state_change_closure(self, old){
-                if (old){
-                    otherOrscHandler = old;
+                if (!old){
+                    old = function(){};
                 }
+                otherOrscHandler = old;
 
                 function state_change(){
                     log('readyState: ' + self.readyState + '; status: ' + self.status);
