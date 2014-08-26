@@ -7,18 +7,19 @@ TAGS = """
     <script src="{static_url}ut_relogin/jquery.utRelogin.js"></script>
     <script>
         var $jqUtRelogin = jQuery.noConflict(true);
-        $jqUtRelogin.utRelogin({{'redirectUrl': '{redirect_url}'}});
+        $jqUtRelogin.utRelogin({{
+            'redirectUrl': '{redirect_url}',
+        }});
     </script>
-"""
+""".format(
+    static_url=settings.STATIC_URL,
+    redirect_url=reverse('ut_relogin_redirect'),
+)
 
 
 class UtReloginHeadTagMiddleware(object):
 
     def process_response(self, request, response):
         if 'html' in response['Content-Type'].lower():
-            tags = TAGS.format(
-                static_url=settings.STATIC_URL,
-                redirect_url=reverse('ut_relogin_redirect'),
-            )
-            response.content = response.content.replace(u'<head>', tags, 1)
+            response.content = response.content.replace(u'<head>', TAGS, 1)
         return response
