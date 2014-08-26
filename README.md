@@ -19,27 +19,34 @@ named 'extra', you can use these `svn:externals` parameters:
 
 Then, install it into your Django project:
 
-1. Add "`ut_relogin`" to your `INSTALLED_APPS` setting:
-      ```python
-      # settings.py
-      # ...
-      INSTALLED_APPS = (
-          # ...
-          'ut_relogin',
-          # ...
-      )
-      ```
-
-1. Add the middleware to your `MIDDLEWARE_CLASSES` setting:
-      ```python
-      # settings.py
-      # ...
-      MIDDLEWARE_CLASSES = (
-          # ...
-          'ut_relogin.middleware.UtReloginHeadTagMiddleware',
-          # ...
-      )
-      ```
+1. Modify your project settings
+  1. Add "`ut_relogin`" to your `INSTALLED_APPS` setting:
+        ```python
+        # settings.py
+        # ...
+        INSTALLED_APPS = (
+            # ...
+            'ut_relogin',
+            # ...
+        )
+        ```
+  1. Add the middleware to your `MIDDLEWARE_CLASSES` setting:
+        ```python
+        # settings.py
+        # ...
+        MIDDLEWARE_CLASSES = (
+            # ...
+            'ut_relogin.middleware.UtReloginHeadTagMiddleware',
+            # ...
+        )
+        ```
+  1. Tell `ut_relogin` what context class and message to use:
+        ```python
+        # settings.py
+        # ...
+        UT_RELOGIN_CONTEXT = 'mygroup.myproject.myapp.mycontext.MyContextClass'
+        UT_RELOGIN_MESSAGE = 'You are now logged in; repeat your previous action.'
+        ```
 
 1. Add the URLs to your root URLconf:
       ```python
