@@ -134,10 +134,9 @@ window.utrelogin.callback_registry = {};
                     enumerable: false,
                     get: function () {
                         return function () {
-                            for (var i=0; i<orsc.length; i++) {
+                            for (var i = 0; i < orsc.length; i++) {
                                 log('calling onreadystatechange #' + i);
-                                log(orsc[i]);
-                                orsc[i].call(self);
+                                orsc[i]();
                             }
                         };
                     },
