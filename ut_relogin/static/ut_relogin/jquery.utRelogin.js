@@ -73,24 +73,11 @@ window.utrelogin.callback_registry = {};
             window.open(opts.redirectUrl, null, opts.popupOptions);
         }
 
-        function handleAsyncError(event) {
-            // TODO: is stopping propagation appropriate, or is status === 0 too broad?
-            log('async: stopping event propagation');
-            event.stopPropagation();
-            log('async: aborting request');
-            this.abort();
-            startLogin();
-        }
-
         function new_open(method, url, async, user, pass){
             this._open_args = arguments;
             this._async = async;
             this._same_origin_error = null;
             this._current_error = undefined;
-            if (async) {
-                log('adding error event listener for async request');
-                this.addEventListener('error', handleAsyncError, true);
-            }
             log('calling original XMLHttpRequest.open');
             xhr_open.call(this, method, url, async, user, pass);
         }
