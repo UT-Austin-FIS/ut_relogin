@@ -143,7 +143,7 @@ window.utrelogin.callback_registry = {};
                     },
                     set: function (newValue) {
                         log('adding an onreadystatechange function...');
-                        log(newValue);
+                        console.info(newValue);
                         orsc.push(newValue);
                     },
                 });
