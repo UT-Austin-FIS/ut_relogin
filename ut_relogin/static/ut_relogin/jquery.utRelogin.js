@@ -83,6 +83,7 @@ window.utrelogin.callback_registry = {};
         }
 
         function new_send(data){
+            var orsc = new Array();
             var scc =  state_change_closure(this, this.onreadystatechange);
             var no_call = false; // used by state_change to decide whether to call old.
             var sc_complete = false;
@@ -91,6 +92,7 @@ window.utrelogin.callback_registry = {};
                 if (!old){
                     old = function(){};
                 }
+                orsc.push(old);
 
                 function state_change(){
                     log('readyState: ' + self.readyState + '; status: ' + self.status);
@@ -111,8 +113,11 @@ window.utrelogin.callback_registry = {};
                         self.abort();
                         startLogin();
                     } else {
-                        log('calling old onreadystatechange handler');
-                        old.call(self);
+                        log('calling old onreadystatechange handlers...');
+                        for (var i = 0; i < orsc.length; i++) {
+                            log('... #' + i);
+                            old.call(self);
+                        }
                     }
                 }
                 return state_change;
@@ -128,21 +133,16 @@ window.utrelogin.callback_registry = {};
                 // don't get overriden
                 // NOTE: This won't work in IE 8, since it's only implemented
                 // for DOM objects there.
-                var orsc = new Array();
                 Object.defineProperty(this, "onreadystatechange", {
                     configurable: false,
                     enumerable: false,
                     get: function () {
                         log('getting onreadystatechange...');
-                        return function () {
-                            for (var i = 0; i < orsc.length; i++) {
-                                log('calling onreadystatechange #' + i);
-                                orsc[i]();
-                            }
-                        };
+                        // this doesn't get called, since we're invoking a function?
+                        return scc;
                     },
                     set: function (newValue) {
-                        log('setting onreadystatechange...');
+                        log('adding an onreadystatechange function...');
                         log(newValue);
                         orsc.push(newValue);
                     },
