@@ -116,7 +116,7 @@ window.utrelogin.callback_registry = {};
                         log('calling old onreadystatechange handlers...');
                         for (var i = 0; i < orsc.length; i++) {
                             log('... #' + i);
-                            old.call(self);
+                            orsc[i].call(self);
                         }
                     }
                 }
