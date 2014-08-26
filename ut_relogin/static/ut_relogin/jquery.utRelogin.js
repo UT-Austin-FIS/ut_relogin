@@ -133,6 +133,7 @@ window.utrelogin.callback_registry = {};
                     configurable: false,
                     enumerable: false,
                     get: function () {
+                        log('getting onreadystatechange...');
                         return function () {
                             for (var i = 0; i < orsc.length; i++) {
                                 log('calling onreadystatechange #' + i);
