@@ -36,6 +36,7 @@ window.utrelogin.callback_registry = {};
         'redirectUrl': '/',
         'popupOptions': 'toolbar=yes,scrollbars=yes,resizable=yes,' +
                         'dependent=yes,height=500,width=800',
+        'showDialog': false,
     };
 
     /**
@@ -75,7 +76,35 @@ window.utrelogin.callback_registry = {};
         var xhr_open = XMLHttpRequest.prototype.open;
         var xhr_send = XMLHttpRequest.prototype.send;
 
+        var $dialog;
+
+        function showDialog(){
+            $dialog = $('<div></div>');
+            $dialog.text(
+                'Your session has timed out. ' +
+                'You can retry your previous action after logging in again.'
+            );
+            $dialog.css('position', 'fixed')
+                   .css('top', '50%')
+                   .css('left', '50%')
+                   .css('border', '1px solid black')
+                   .css('background-color', 'light-gray');
+            log('adding dialog to body');
+            $('body').append($dialog);
+        }
+
+        function dismissDialog(){
+            log('detaching dialog');
+            $dialog.detach();
+        }
+
         function startLogin(){
+            if (opts.showDialog) {
+                window.utRelogin.callback_registry.postLogin = dismissDialog;
+                showDialog();
+            } else {
+                window.utRelogin.callback_registry.postLogin = function(){};
+            }
             log('opening login window');
             window.open(opts.redirectUrl, null, opts.popupOptions);
         }
