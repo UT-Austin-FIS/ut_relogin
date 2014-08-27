@@ -36,7 +36,7 @@ window.utrelogin.callback_registry = {};
         'redirectUrl': '/',
         'popupOptions': 'toolbar=yes,scrollbars=yes,resizable=yes,' +
                         'dependent=yes,height=500,width=800',
-        'showDialog': false,
+        'showDialog': true,
     };
 
     /**
@@ -100,10 +100,10 @@ window.utrelogin.callback_registry = {};
 
         function startLogin(){
             if (opts.showDialog) {
-                window.utRelogin.callback_registry.postLogin = dismissDialog;
+                window.utrelogin.callback_registry.postLogin = dismissDialog;
                 showDialog();
             } else {
-                window.utRelogin.callback_registry.postLogin = function(){};
+                window.utrelogin.callback_registry.postLogin = function(){};
             }
             log('opening login window');
             window.open(opts.redirectUrl, null, opts.popupOptions);
