@@ -10,7 +10,11 @@
 
   <script type="text/javascript">
     (function () {
-      window.parent.utrelogin.callback_registry.postLogin();
+      try {
+        window.opener.utrelogin.callback_registry.postLogin();
+      } catch (err) {
+        console.info('unable to do post-login');
+      }
       var timeLeft = 7,
           cinterval;
 
