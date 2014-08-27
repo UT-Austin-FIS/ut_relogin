@@ -5,6 +5,14 @@ Catches failed AJAX requests for resources under UTLogin where there failure is
 due to an expired session, allowing the user to login again to retry the action
 that triggered the original AJAX request.
 
+## Dependencies
+* `jquery.utRelogin.js`:
+  * IE 8+(?), Firefox, Chrome(?), Safari(?), other modern browsers(?)
+* `ut_relogin`, the Django app:
+  * Python 2.6+
+  * Django 1.4+
+  * A `UTDirectContext` class
+
 Setup - PyPE/Django
 ===================
 
@@ -42,7 +50,8 @@ Then, install it into your Django project:
         )
         ```
 
-  1. Tell `ut_relogin` what context class and message to use:
+  1. Tell `ut_relogin` what context class (that inherits from `UTDirectContext`)
+     and message to use:
         ```python
         # settings.py
         # ...

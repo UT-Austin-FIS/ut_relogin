@@ -3,14 +3,15 @@ from django.core.exceptions import ImproperlyConfigured
 from django.views.generic.base import TemplateView
 
 try:
-    module_path, ctx_class = settings.UT_RELOGIN_CONTEXT.rsplit('.',1)
-    module = __import__(module_path, fromlist=[ctx_class])
-    context = getattr(module, ctx_class)
+    _module_path, _ctx_class = settings.UT_RELOGIN_CONTEXT.rsplit('.',1)
+    module = __import__(_module_path, fromlist=[_ctx_class])
+    ContextClass = getattr(module, _ctx_class)
 except AttributeError:
     raise ImproperlyConfigured(
         'You must supply a path your own RequestContext class by setting a '
         'UT_RELOGIN_CONTEXT in your settings.py file.'
     )
+
 
 class ReloginRedirect(TemplateView):
     template_name = 'ut_relogin/redirected.html'
@@ -24,11 +25,11 @@ class ReloginRedirect(TemplateView):
                 'You must add a UT_RELOGIN_MESSAGE to your settings. Example: '
                 'We have refreshed your login.  Thank you.'
             )
-        ctx.update({'msg':msg})
-        return context(
+        ctx.update({'msg': msg})
+        return ContextClass(
             self.request,
             ctx,
             title='UT Relogin Success',
             page_title='UT Relogin Success',
             window_title='UT Relogin Success',
-            )
+        )
