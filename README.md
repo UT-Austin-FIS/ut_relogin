@@ -23,7 +23,7 @@ named 'extra', you can use these `svn:externals` parameters:
 
 > path: extra/ut_relogin
 
-> URL: ~~https://github.com/UT-Austin-FIS/ut_relogin/tags/v1.0/ut_relogin~~
+> URL: https://github.com/UT-Austin-FIS/ut_relogin/tags/v0.1/ut_relogin
 
 Then, install it into your Django project:
 
