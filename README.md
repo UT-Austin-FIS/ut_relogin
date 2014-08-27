@@ -27,7 +27,7 @@ named 'extra', you can use these `svn:externals` parameters:
 
 Then, install it into your Django project:
 
-1. Modify your project settings
+1. Modify your project settings:
   1. Add "`ut_relogin`" to your `INSTALLED_APPS` setting:
       ```python
       # settings.py
