@@ -51,11 +51,10 @@ window.utrelogin.callback_registry = {};
      * @private
      */
     function log(msg) {
-        if (!showLog) {
-            return;
+        if (showLog) {
+            var logTime = new Date().getTime();
+            console.info('==> [' + logTime + '] (jQuery.utRelogin) --> ' + msg);
         }
-        var logTime = new Date().getTime();
-        console.info('==> [' + logTime + '] (jQuery.utRelogin) --> ' + msg);
     }
 
     /**
@@ -91,10 +90,10 @@ window.utrelogin.callback_registry = {};
         }
 
         function new_send(data){
-            var otherOrscHandler;
             var scc =  state_change_closure(this, this.onreadystatechange);
             var no_call = false; // used by state_change to decide whether to call old.
             var sc_complete = false;
+            var otherOrscHandler;
 
             function state_change_closure(self, old){
                 if (!old){
@@ -110,8 +109,8 @@ window.utrelogin.callback_registry = {};
                         sc_complete = true;
 
                         if (self.status === 0){
+                            log('same origin error inferred');
                             self._same_origin_error = true;
-                            log('SOE: ' + self._same_origin_error);
                         }
                     }
 
@@ -121,7 +120,7 @@ window.utrelogin.callback_registry = {};
                         self.abort();
                         startLogin();
                     } else {
-                        log('calling old onreadystatechange handler...');
+                        log('calling other onreadystatechange handler...');
                         otherOrscHandler.call(self);
                     }
                 }
@@ -129,41 +128,45 @@ window.utrelogin.callback_registry = {};
             }
 
             this._data = data;
+
             if (this._async){
-                log('adding onreadystatechange function');
+                log('adding our onreadystatechange function');
                 this.onreadystatechange = scc;
 
-                // jQuery will modify onreadystatechange after calling our
-                // new_send function; let's intercept that modification so we
+                // jQuery will set onreadystatechange *after* calling send,
+                // which would normal replace the onreadystatechange function
+                // we just set here. Let's intercept that modification so we
                 // don't get completely overridden.
                 //
                 // NOTE: This won't work in IE 8, since defineProperty is only
-                // implemented for DOM objects there.
+                // implemented for DOM objects there, and we're modifying a
+                // native JavaScript object here.
                 Object.defineProperty(this, "onreadystatechange", {
                     configurable: false,
                     enumerable: false,
                     get: function () {
                         // It seems that this doesn't actually get called,
                         // perhaps since the native XMLHttpRequest.send does
-                        // some fancy native code thing?
+                        // some fancy native method calling thing?
                         //
                         // Let's return something just in case.
-                        log('getting onreadystatechange...');
+                        log('getting onreadystatechange...hello!');
                         return scc;
                     },
                     set: function (newValue) {
-                        // Instead of overwriting our handler, let's overwrite
-                        // the other handler that we'll call after doing our
-                        // thing.
+                        // Instead of letting other scripts overwrite our
+                        // handler, let's overwrite the other handler that
+                        // we'll call after doing our thing.
                         log('changing other onreadystatechange function...');
                         otherOrscHandler = newValue;
                     },
                 });
             }
+
             try {
                 log('calling original XMLHttpRequest.send');
                 xhr_send.call(this, data);
-            } catch(err) {
+            } catch (err) {
                 log('caught an error');
                 // we need to defer action on this -- if it is a same origin error,
                 // we can ignore it if login is triggered.
