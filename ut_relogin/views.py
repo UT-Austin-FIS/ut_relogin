@@ -2,6 +2,8 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.views.generic.base import TemplateView
 
+DEFAULT_TIMEOUT_SECONDS = 7
+
 try:
     _module_path, _ctx_class = settings.UT_RELOGIN_CONTEXT.rsplit('.',1)
     module = __import__(_module_path, fromlist=[_ctx_class])
@@ -25,7 +27,10 @@ class ReloginRedirect(TemplateView):
                 'You must add a UT_RELOGIN_MESSAGE to your settings. Example: '
                 'We have refreshed your login.  Thank you.'
             )
-        ctx.update({'msg': msg})
+        ctx.update({
+            'msg': msg,
+            'timeout': DEFAULT_TIMEOUT_SECONDS,
+        })
         return ContextClass(
             self.request,
             ctx,

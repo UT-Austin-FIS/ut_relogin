@@ -5,12 +5,15 @@
   </div>
   <div id="info">
     <p>{{ msg }}</p>
-    <p>This window will close automatically in <span id="countdown"></span> seconds.</p>
+    <p>
+      This window will close automatically in
+      <span id="countdown">{{ timeout }}</span> seconds.
+    </p>
   </div>
 
   <script type="text/javascript">
     (function () {
-      var timeLeft = 7,
+      var timeLeft = {{ timeout }},
           cinterval;
 
       var timeDec = function (){
