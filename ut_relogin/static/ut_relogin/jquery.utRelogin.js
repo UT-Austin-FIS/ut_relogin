@@ -119,8 +119,12 @@ window.utrelogin.callback_registry = {};
                 if (opts.showDialog) {
                     dismissDialog();
                 }
-                log('retrying new_send...');
-                xhr.send(data);
+                log('retrying xhr_send...');
+                try {
+                  xhr_send.call(xhr, data);
+                } catch (err) {
+                  log(err);
+                }
             }
 
             function startLogin(){
