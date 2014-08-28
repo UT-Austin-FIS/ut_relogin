@@ -42,7 +42,7 @@ window.utrelogin.callback_registry = {};
     /**
      * Whether to show log messages in the console.
      */
-    var showLog = /local\.utexas\.edu$/.test(window.location.hostname);
+    var showLog = /(local|dpdev1\.dp)\.utexas\.edu$/.test(window.location.hostname);
 
     /**
      * Log messages consistently.
@@ -99,17 +99,6 @@ window.utrelogin.callback_registry = {};
             $dialog.detach();
         }
 
-        function startLogin(){
-            if (opts.showDialog) {
-                window.utrelogin.callback_registry.postLogin = dismissDialog;
-                showDialog();
-            } else {
-                window.utrelogin.callback_registry.postLogin = function(){};
-            }
-            log('opening login window');
-            window.open(opts.redirectUrl, null, opts.popupOptions);
-        }
-
         function new_open(method, url, async, user, pass){
             this._open_args = arguments;
             this._async = async;
@@ -124,6 +113,23 @@ window.utrelogin.callback_registry = {};
             var no_call = false; // used by state_change to decide whether to call old.
             var sc_complete = false;
             var otherOrscHandler;
+
+            function postLogin(){
+                if (opts.showDialog) {
+                    dismissDialog();
+                }
+                log('retrying new_send...');
+                this.send(data);
+            }
+
+            function startLogin(){
+                if (opts.showDialog) {
+                    showDialog();
+                }
+                window.utrelogin.callback_registry.postLogin = postLogin;
+                log('opening login window');
+                window.open(opts.redirectUrl, null, opts.popupOptions);
+            }
 
             function state_change_closure(self, old){
                 if (!old){
