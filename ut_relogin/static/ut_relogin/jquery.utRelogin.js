@@ -85,10 +85,11 @@ window.utrelogin.callback_registry = {};
                 'You can retry your previous action after logging in again.'
             );
             $dialog.css('position', 'fixed')
-                   .css('top', '50%')
+                   .css('width', '50%')
+                   .css('top', '5%')
                    .css('left', '50%')
-                   .css('border', '1px solid black')
-                   .css('background-color', 'light-gray');
+                   .css('border', '2px solid black')
+                   .css('background-color', 'lightgray');
             log('adding dialog to body');
             $('body').append($dialog);
         }
