@@ -87,7 +87,7 @@ window.utrelogin.callback_registry = {};
             $dialog.css('position', 'fixed')
                    .css('width', '50%')
                    .css('top', '5%')
-                   .css('left', '50%')
+                   .css('left', '25%')
                    .css('border', '2px solid black')
                    .css('background-color', 'lightgray');
             log('adding dialog to body');
