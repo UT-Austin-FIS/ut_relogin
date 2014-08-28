@@ -114,12 +114,13 @@ window.utrelogin.callback_registry = {};
             var sc_complete = false;
             var otherOrscHandler;
 
+            var xhr = this;
             function postLogin(){
                 if (opts.showDialog) {
                     dismissDialog();
                 }
                 log('retrying new_send...');
-                this.send(data);
+                xhr.send(data);
             }
 
             function startLogin(){
