@@ -102,7 +102,7 @@ window.utrelogin.callback_registry = {};
                 otherOrscHandler = old;
 
                 function state_change(){
-                    log('readyState: ' + self.readyState + '; status: ' + self.status);
+                    log('in state_change - readyState: ' + self.readyState);
 
                     if (self.readyState === 4){
                         log('state changes are complete');
