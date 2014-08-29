@@ -251,7 +251,12 @@ window.utrelogin.postLogin = function(){
 
             function startLogin(){
                 if (opts.showDialog) {
-                    createAndShowDialog();
+                    var $d = createAndShowDialog();
+                    window.utrelogin.addPostLoginCallback(function() {
+                        $d.find('p').text(
+                            'You are now logged in - retry your last action'
+                        );
+                    });
                 }
                 log('opening login window');
                 window.open(opts.redirectUrl, null, opts.popupOptions);
