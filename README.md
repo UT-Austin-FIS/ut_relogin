@@ -7,11 +7,11 @@ that triggered the original AJAX request.
 
 ## Dependencies
 * `jquery.utRelogin.js`:
-  * IE 8+(?), Firefox, Chrome(?), Safari(?), other modern browsers(?)
+  * IE 9+, Firefox, Chrome, Safari(?), other modern browsers(?)
 * `ut_relogin`, the Django app:
   * Python 2.6+
   * Django 1.4+
-  * A `UTDirectContext` class
+  * Optional: A `UTDirectContext` class
 
 Setup - PyPE/Django
 ===================
@@ -27,43 +27,47 @@ named 'extra', you can use these `svn:externals` parameters:
 
 Then, install it into your Django project:
 
-1. Modify your project settings:
-  1. Add "`ut_relogin`" to your `INSTALLED_APPS` setting:
+1. Add "`ut_relogin`" to your `INSTALLED_APPS` setting:
+    ```python
+    # settings.py
+    # ...
+    INSTALLED_APPS = (
+        # ...
+        'ut_relogin',
+        # ...
+    )
+    ```
+
+1. Add the middleware to your `MIDDLEWARE_CLASSES` setting:
       ```python
       # settings.py
       # ...
-      INSTALLED_APPS = (
+      MIDDLEWARE_CLASSES = (
           # ...
-          'ut_relogin',
+          'ut_relogin.middleware.UtReloginHeadTagMiddleware',
           # ...
       )
       ```
 
-  1. Add the middleware to your `MIDDLEWARE_CLASSES` setting:
-        ```python
-        # settings.py
-        # ...
-        MIDDLEWARE_CLASSES = (
-            # ...
-            'ut_relogin.middleware.UtReloginHeadTagMiddleware',
-            # ...
-        )
-        ```
+1. Set up a URL to be opened in the popup window after login:
 
-  1. Tell `ut_relogin` what context class (that inherits from `UTDirectContext`)
-     and message to use:
-        ```python
-        # settings.py
-        # ...
-        UT_RELOGIN_CONTEXT = 'mygroup.myproject.myapp.mycontext.MyContextClass'
-        UT_RELOGIN_MESSAGE = 'You are now logged in; repeat your previous action.'
-        ```
+  1. If you want to use the template and URL provided in this app, you
+     must provide a context class and message, and install our URLconf.
 
-1. Add the URLs to your root URLconf:
-      ```python
-      # urls.py
-      # ...
-      import ut_relogin.urls
+    1. Tell `ut_relogin` what context class (that inherits from
+       `UTDirectContext`) and message to use:
+          ```python
+          # settings.py
+          # ...
+          UT_RELOGIN_CONTEXT = 'mygroup.myproject.myapp.mycontext.MyContextClass'
+          UT_RELOGIN_MESSAGE = 'You are now logged in; repeat your previous action.'
+            ```
+
+    1. Add the URLs to your root URLconf:
+          ```python
+          # urls.py
+          # ...
+          import ut_relogin.urls
 
       urlpatterns = (
           # ...
@@ -71,6 +75,10 @@ Then, install it into your Django project:
       )
 
       ```
+  1. If you want to write your own page for the popup window, which you need to
+     do if you're not using `UTDirectContext`, you should add a URL with the
+     name `ut_relogin_redirect' that exhibits the behavior you want for the
+     popup window.
 
 Setup - non-Django
 ==================
