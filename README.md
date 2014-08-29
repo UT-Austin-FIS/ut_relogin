@@ -103,7 +103,7 @@ Here's what it should look like:
   <script src="url/to/your/copy/of/jquery.utRelogin.js"></script>
   <script>
     var $jqUtRelogin = jQuery.noConflict(true);
-    $jqUtRelogin.utRelogin({'redirectUrl': 'url/to/your/redirect/page.html'});
+    $jqUtRelogin.utRelogin({'popupUrl': 'url/to/your/redirect/page.html'});
   </script>
 
   <!-- ... -->
@@ -114,7 +114,7 @@ Options
 =======
 The configuration options you can pass to $.utRelogin are the following:
 
-* `redirectUrl`
+* `popupUrl`
   * the URL to open in the login window, to which UTLogin will redirect the
     user after login
   * *default*: `'/'`

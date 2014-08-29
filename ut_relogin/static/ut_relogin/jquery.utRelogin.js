@@ -33,7 +33,7 @@ window.utrelogin.callback_registry = {};
      * @type {object}
      */
     var defaultOptions = {
-        'redirectUrl': '/',
+        'popupUrl': '/',
         'popupOptions': 'toolbar=yes,scrollbars=yes,resizable=yes,' +
                         'dependent=yes,height=500,width=800',
     };
@@ -77,7 +77,7 @@ window.utrelogin.callback_registry = {};
 
         function startLogin(){
             log('opening login window');
-            window.open(opts.redirectUrl, null, opts.popupOptions);
+            window.open(opts.popupUrl, null, opts.popupOptions);
         }
 
         function new_open(method, url, async, user, pass){

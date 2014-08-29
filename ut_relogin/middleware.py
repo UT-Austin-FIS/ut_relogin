@@ -8,12 +8,12 @@ TAGS = """
     <script>
         var $jqUtRelogin = jQuery.noConflict(true);
         $jqUtRelogin.utRelogin({{
-            'redirectUrl': '{redirect_url}',
+            'popupUrl': '{popup_url}',
         }});
     </script>
 """.format(
     static_url=settings.STATIC_URL,
-    redirect_url=reverse('ut_relogin_redirect'),
+    popup_url=reverse('ut_relogin_redirect'),
 )
 
 
