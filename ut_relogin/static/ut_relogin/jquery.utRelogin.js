@@ -25,9 +25,9 @@ window.utrelogin.addCallback = function(fn){
  */
 window.utrelogin.postLogin = function(){
     for (var i = 0; i < window.utrelogin.callbacks.length; i++) {
-        window.utRelogin.callbacks[i]();
+        window.utrelogin.callbacks[i]();
     }
-    window.utRelogin.callbacks = []; // clear it out
+    window.utrelogin.callbacks = []; // clear it out
 };
 
 (function(factory, window) {
