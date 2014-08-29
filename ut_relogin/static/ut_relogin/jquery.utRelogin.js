@@ -1,4 +1,11 @@
-// http://stackoverflow.com/questions/6884616/intercept-all-ajax-calls
+/**
+ * utRelogin
+ *
+ * Intercepts all AJAX requests and enables the user to login to UTLogin
+ * again if the request fails due to a same-origin error.
+ *
+ * See: http://stackoverflow.com/questions/6884616/intercept-all-ajax-calls
+ */
 
 window.utrelogin = {}; // claim a global scope.
 
@@ -10,16 +17,19 @@ window.utrelogin = {}; // claim a global scope.
 window.utrelogin.callbacks = [];
 
 /**
- * Function to be called by consuming applications to add callbacks
+ * Allow consuming applications to add callbacks to be run after login
  *
  * @type {Function}
  */
-window.utrelogin.addCallback = function(fn){
+window.utrelogin.addPostLoginCallback = function(fn){
     window.utrelogin.callbacks.push(fn);
 };
 
 /**
- * Function to be called by the post-login page
+ * Function to be called by the post-login page; intended to be accessed via
+ * the window.opener object - window.opener.utrelogin.postLogin()
+ *
+ * Clears the callback registry after executing everything
  *
  * @type {Function}
  */
@@ -58,7 +68,6 @@ window.utrelogin.postLogin = function(){
         'popupOptions': 'toolbar=yes,scrollbars=yes,resizable=yes,' +
                         'dependent=yes,height=500,width=800',
         'showDialog': true,
-        'callbacks': [],
     };
 
     /**
@@ -140,9 +149,6 @@ window.utrelogin.postLogin = function(){
                 if (opts.showDialog) {
                     showDialog();
                     window.utrelogin.callbacks.push(dismissDialog);
-                    for (var i = 0; i < opts.callbacks.length; i++) {
-                        window.utrelogin.callbacks.push(opts.callbacks[i]);
-                    }
                 }
                 log('opening login window');
                 window.open(opts.redirectUrl, null, opts.popupOptions);
