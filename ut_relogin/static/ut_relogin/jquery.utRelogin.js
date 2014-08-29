@@ -178,12 +178,10 @@ window.utrelogin.postLogin = function(){
             ].join(''));
             $contentDiv.css({
                 'position': 'fixed',
-                'top': '15%',
-                'bottom': '15%',
+                'top': '25%',
                 'left': '20%',
                 'right': '20%',
                 'background': 'white',
-                'border': '2px outset #EEE',
                 'padding': '10px',
                 'z-index': Z_INDEX + 1
             });
