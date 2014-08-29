@@ -2,14 +2,14 @@
  * @fileOverview
  * A jQuery plugin to detect when the user's UTLogin session has expired and
  * allow them to relogin without seeing spurious error messages from failed,
- * same-origin-violating AJAX requests. It MAY also protect form submission.
+ * same-origin-violating AJAX requests. It can also protect form submission.
  *
  * @name utRelogin
  * @author Eric Petersen <epetersen@austin.utexas.edu>
  * @author Adam Connor <adam.conor@austin.utexas.edu>
  * @author Todd Graves <tgraves@austin.utexas.edu>
  * @version 2.0.0
- * @requires jQuery (developed against 1.11.1, but only requires plugin ability)
+ * @requires jQuery (developed against 1.11.1)
  *
  * Usage:
  *
@@ -22,9 +22,11 @@
  * <script>
  *     $jqUtRelogin = $.noConflict(true);
  *     $jqUtRelogin.utRelogin({
- *         redirectUrl: 'path/to/relogin/page.html',
+ *         popupUrl: 'path/to/relogin/page.html',
  *         popupOptions: 'options to window.open (see below)',
  *         showDialog: true,
+ *         formProtectUrl: 'path/to/any/page.html',
+ *         formProtectSelector: 'form[method=post]'
  *     });
  * </script>
  *
@@ -88,15 +90,27 @@ window.utrelogin.postLogin = function(){
 
     /**
      * utRelogin options and default values
+     * - popupUrl: the URL to open in the new window to trigger the UTLogin
+     *             cycle
+     * - popupOptions: options to window.open to use when opening the new
+     *                 window
+     * - showDialog: whether to show a dialog on the source page when opening
+     *               the login window
+     * - formProtectSelector: the jQuery selector to use for deciding with
+     *                        forms to protect with an synchronous AJAX call
+     *                        ('' = no form protection)
+     * - formProtectUrl: the URL to call to protect form submission
      *
      * @private
      * @type {object}
      */
     var defaultOptions = {
-        'redirectUrl': '/',
+        'popupUrl': '/',
         'popupOptions': 'toolbar=yes,scrollbars=yes,resizable=yes,' +
                         'dependent=yes,height=500,width=800',
         'showDialog': true,
+        'formProtectSelector': 'form[method=post]',
+        'formProtectUrl': '/',
     };
 
     /**
@@ -132,6 +146,18 @@ window.utrelogin.postLogin = function(){
             configOptions = {};
         }
         var opts = $.extend({}, defaultOptions, configOptions);
+
+        if (opts.formProtectSelector !== ''){
+            $(opts.formProtectSelector).on('submit', function(e){
+                event.preventDefault();
+                var $form = $(event.target);
+                $.ajax(
+                    url:opts.formProtectUrl,
+                    async: false,
+                    success: function(){ $form.submit(); }
+                });
+            });
+        }
 
         var xhr_open = XMLHttpRequest.prototype.open;
         var xhr_send = XMLHttpRequest.prototype.send;
@@ -259,7 +285,7 @@ window.utrelogin.postLogin = function(){
                     });
                 }
                 log('opening login window');
-                window.open(opts.redirectUrl, null, opts.popupOptions);
+                window.open(opts.popupUrl, null, opts.popupOptions);
             }
 
             function state_change_closure(self, old){

@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-from django.views.generic.base import TemplateView
+from django.core.http import HttpResponse
+from django.views.generic.base import View, TemplateView
 
 DEFAULT_TIMEOUT_SECONDS = 7
 
@@ -38,3 +39,9 @@ class ReloginRedirect(TemplateView):
             page_title='UT Relogin Success',
             window_title='UT Relogin Success',
         )
+
+class FormProtectionView(View):
+    response = HttpResponse('ok')
+
+    def get(request):
+        return self.response

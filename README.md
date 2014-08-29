@@ -3,15 +3,16 @@ ut_relogin
 
 Catches failed AJAX requests for resources under UTLogin where there failure is
 due to an expired session, allowing the user to login again to retry the action
-that triggered the original AJAX request.
+that triggered the original AJAX request. Also protects POSTs by making a
+synchronous AJAX call to ensure the session is still active.
 
 ## Dependencies
 * `jquery.utRelogin.js`:
-  * IE 8+(?), Firefox, Chrome(?), Safari(?), other modern browsers(?)
+  * IE 9+, Firefox, Chrome, Safari(?), other modern browsers(?)
 * `ut_relogin`, the Django app:
   * Python 2.6+
   * Django 1.4+
-  * A `UTDirectContext` class
+  * Optional: A `UTDirectContext` class
 
 Setup - PyPE/Django
 ===================
@@ -27,50 +28,59 @@ named 'extra', you can use these `svn:externals` parameters:
 
 Then, install it into your Django project:
 
-1. Modify your project settings:
-  1. Add "`ut_relogin`" to your `INSTALLED_APPS` setting:
+1. Add "`ut_relogin`" to your `INSTALLED_APPS` setting:
+    ```python
+    # settings.py
+    # ...
+    INSTALLED_APPS = (
+        # ...
+        'ut_relogin',
+        # ...
+    )
+    ```
+
+1. Add the middleware to your `MIDDLEWARE_CLASSES` setting:
       ```python
       # settings.py
       # ...
-      INSTALLED_APPS = (
+      MIDDLEWARE_CLASSES = (
           # ...
-          'ut_relogin',
+          'ut_relogin.middleware.UtReloginHeadTagMiddleware',
           # ...
       )
       ```
 
-  1. Add the middleware to your `MIDDLEWARE_CLASSES` setting:
-        ```python
-        # settings.py
-        # ...
-        MIDDLEWARE_CLASSES = (
-            # ...
-            'ut_relogin.middleware.UtReloginHeadTagMiddleware',
-            # ...
-        )
-        ```
+1. Set up a URL to be opened in the popup window after login:
 
-  1. Tell `ut_relogin` what context class (that inherits from `UTDirectContext`)
-     and message to use:
-        ```python
-        # settings.py
-        # ...
-        UT_RELOGIN_CONTEXT = 'mygroup.myproject.myapp.mycontext.MyContextClass'
-        UT_RELOGIN_MESSAGE = 'You are now logged in; repeat your previous action.'
-        ```
+  1. If you want to use the template and URL provided in this app, you
+     must provide a context class and message, and install our URLconf.
 
-1. Add the URLs to your root URLconf:
-      ```python
-      # urls.py
-      # ...
-      import ut_relogin.urls
-
-      urlpatterns = (
+    1. Tell `ut_relogin` what context class (that inherits from
+       `UTDirectContext`) and message to use:
+          ```python
+          # settings.py
           # ...
-          url(r'^', include(ut_relogin.urls)),
-      )
+          UT_RELOGIN_CONTEXT = 'mygroup.myproject.myapp.mycontext.MyContextClass'
+          UT_RELOGIN_MESSAGE = 'You are now logged in; repeat your previous action.'
+          ```
 
-      ```
+    1. Add the URLs to your root URLconf:
+          ```python
+          # urls.py
+          # ...
+          import ut_relogin.urls
+
+          urlpatterns = (
+              # ...
+              url(r'^', include(ut_relogin.urls)),
+          )
+          ```
+
+  1. If you want to write your own page for the popup window, which you need to
+     do if you're not using `UTDirectContext`, you should add a URL with the
+     name `ut_relogin_redirect` that exhibits the behavior you want for the
+     popup window. You also need a URL named `ut_relogin_form_protection`
+     that simply returns the text 'ok' to all GET queries.
 
 Setup - non-Django
 ==================
@@ -103,7 +113,10 @@ Here's what it should look like:
   <script src="url/to/your/copy/of/jquery.utRelogin.js"></script>
   <script>
     var $jqUtRelogin = jQuery.noConflict(true);
-    $jqUtRelogin.utRelogin({'redirectUrl': 'url/to/your/redirect/page.html'});
+    $jqUtRelogin.utRelogin({
+        'popupUrl': 'url/to/your/redirect/page.html',
+        'formUrl': 'url/to/any/page.html'
+    });
   </script>
 
   <!-- ... -->
@@ -114,13 +127,23 @@ Options
 =======
 The configuration options you can pass to $.utRelogin are the following:
 
-* `redirectUrl`
+* `popupUrl`
   * the URL to open in the login window, to which UTLogin will redirect the
     user after login
   * *default*: `'/'`
 * `popupOptions`
   * options to pass to `window.open()` for controlling the login browser window
   * *default*: `'toolbar=yes,scrollbars=yes,resizable=yes,dependent=yes,height=500,width=800'`
+* `formProtectSelector`
+  * the jQuery selector to which to attach "submit" listeners - the listener does
+    a synchronous AJAX request to force the AJAX logic to take place before
+    the form submission, preventing submissions while the session is expired
+  * make it a blank string to disable this behavior
+  * *default*: `form[method=post]`
+* `formProtectUrl`
+  * the URL to call to protect form submission
+  * *default*: `'/'`
+
 
 Explanation
 ===========
