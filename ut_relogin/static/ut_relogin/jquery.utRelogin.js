@@ -136,27 +136,104 @@ window.utrelogin.postLogin = function(){
         var xhr_open = XMLHttpRequest.prototype.open;
         var xhr_send = XMLHttpRequest.prototype.send;
 
-        var $dialog;
+        function createAndShowDialog(){
+            if ($('#utRelogin-dialog').size()) {
+                return;
+            }
 
-        function showDialog(){
-            $dialog = $('<div></div>');
-            $dialog.text(
-                'Your session has timed out. ' +
-                'You can retry your previous action after logging in again.'
-            );
-            $dialog.css('position', 'fixed')
-                   .css('width', '50%')
-                   .css('top', '5%')
-                   .css('left', '25%')
-                   .css('border', '2px solid black')
-                   .css('background-color', 'lightgray');
+            var Z_INDEX = 9999999;
+
+            var $dialog = $('<div id="utRelogin-dialog"></div>');
+            $dialog.css({
+                'position': 'absolute',
+                'top': '0%',
+                'bottom': '0%',
+                'left': '0%',
+                'right': '0%',
+                'background': 'transparent'
+            });
+
+            var $dialogBackground = $('<div></div>');
+            $dialogBackground.css({
+                'position': 'fixed',
+                'top': '0%',
+                'bottom': '0%',
+                'left': '0%',
+                'right': '0%',
+                'background': '#DDD',
+                'z-index': Z_INDEX,
+                'opacity': '0.8'
+            });
+
+            var $contentDiv = $([
+                '<div>',
+                '<div>',
+                '<button>Close</button>',
+                '<p>',
+                'Your UTLogin session has expired. ',
+                'Please log in again in the popup window to continue.',
+                '</p>',
+                '</div>',
+                '</div>'
+            ].join(''));
+            $contentDiv.css({
+                'position': 'fixed',
+                'top': '15%',
+                'bottom': '15%',
+                'left': '20%',
+                'right': '20%',
+                'background': 'white',
+                'border': '2px outset #EEE',
+                'padding': '10px',
+                'z-index': Z_INDEX + 1
+            });
+            $contentDiv.find('div').css({
+                'width': '100%',
+                'font-weight': 'bold',
+                'border-bottom': '1px solid #DDD',
+                'margin-bottom': '5px',
+                'padding-bottom': '5px'
+            });
+            $contentDiv.find('button').css({
+                'font-weight': 'normal',
+                'float': 'right',
+                'display': 'block'
+            });
+
             log('adding dialog to body');
+            $dialog.append($dialogBackground);
+            $dialog.append($contentDiv);
             $('body').append($dialog);
+
+            $contentDiv.click(function(event) {
+                event.stopPropagation();
+            });
+
+            $dialog.click(function(event) {
+                event.stopPropagation();
+                destroyAndHideLoginDialog($dialog);
+            });
+
+            function escapeHandler(event) {
+                if (event.which === 27 /* ESC */) {
+                    destroyAndHideLoginDialog($dialog);
+                }
+            }
+            $dialog.data('utRelogin.escapeHandler', escapeHandler);
+
+            $(window).keydown(escapeHandler);
+
+            $contentDiv.find('button').click(function() {
+                destroyAndHideLoginDialog($dialog);
+            });
+
+            return $dialog;
         }
 
-        function dismissDialog(){
-            log('detaching dialog');
-            $dialog.detach();
+        function destroyAndHideLoginDialog($dialog) {
+            var escapeHandler = $dialog.data('utRelogin.escapeHandler');
+            $(window).off('keydown', null, escapeHandler);
+            $dialog.remove();
         }
 
         function new_open(method, url, async, user, pass){
@@ -176,8 +253,7 @@ window.utrelogin.postLogin = function(){
 
             function startLogin(){
                 if (opts.showDialog) {
-                    showDialog();
-                    window.utrelogin.callbacks.push(dismissDialog);
+                    createAndShowDialog();
                 }
                 log('opening login window');
                 window.open(opts.redirectUrl, null, opts.popupOptions);
