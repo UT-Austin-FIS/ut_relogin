@@ -28,6 +28,13 @@ window.utrelogin.callback_registry = {};
 
     /**
      * utRelogin options and default values
+     * - popupUrl: the URL to open in the new window to trigger the UTLogin
+     *             cycle
+     * - popupOptions: options to window.open to use when opening the new
+     *                 window
+     * - formProtectSelector: the jQuery selector to use for deciding with
+     *                        forms to protect with an synchronous AJAX call
+     * - formProtectUrl: the URL to call to protect form submission
      *
      * @private
      * @type {object}
@@ -36,6 +43,8 @@ window.utrelogin.callback_registry = {};
         'popupUrl': '/',
         'popupOptions': 'toolbar=yes,scrollbars=yes,resizable=yes,' +
                         'dependent=yes,height=500,width=800',
+        'formProtectSelector': 'form[method=post]',
+        'formProtectUrl': '/',
     };
 
     /**
@@ -71,6 +80,18 @@ window.utrelogin.callback_registry = {};
             configOptions = {};
         }
         var opts = $.extend({}, defaultOptions, configOptions);
+
+        if (opts.formProtectSelector !== ''){
+            $(opts.formProtectSelector).on('submit', function(e){
+                event.preventDefault();
+                var $form = $(event.target);
+                $.ajax(
+                    url:opts.formProtectUrl,
+                    async: false,
+                    success: function(){ $form.submit(); }
+                });
+            });
+        }
 
         var xhr_open = XMLHttpRequest.prototype.open;
         var xhr_send = XMLHttpRequest.prototype.send;

@@ -3,7 +3,8 @@ ut_relogin
 
 Catches failed AJAX requests for resources under UTLogin where there failure is
 due to an expired session, allowing the user to login again to retry the action
-that triggered the original AJAX request.
+that triggered the original AJAX request. Also protects POSTs by making a
+synchronous AJAX call to ensure the session is still active.
 
 ## Dependencies
 * `jquery.utRelogin.js`:
@@ -78,7 +79,8 @@ Then, install it into your Django project:
   1. If you want to write your own page for the popup window, which you need to
      do if you're not using `UTDirectContext`, you should add a URL with the
      name `ut_relogin_redirect` that exhibits the behavior you want for the
-     popup window.
+     popup window. You also need a URL named `ut_relogin_form_protection`
+     that simply returns the text 'ok' to all GET queries.
 
 Setup - non-Django
 ==================
@@ -111,7 +113,10 @@ Here's what it should look like:
   <script src="url/to/your/copy/of/jquery.utRelogin.js"></script>
   <script>
     var $jqUtRelogin = jQuery.noConflict(true);
-    $jqUtRelogin.utRelogin({'popupUrl': 'url/to/your/redirect/page.html'});
+    $jqUtRelogin.utRelogin({
+        'popupUrl': 'url/to/your/redirect/page.html',
+        'formUrl': 'url/to/any/page.html'
+    });
   </script>
 
   <!-- ... -->
@@ -129,6 +134,16 @@ The configuration options you can pass to $.utRelogin are the following:
 * `popupOptions`
   * options to pass to `window.open()` for controlling the login browser window
   * *default*: `'toolbar=yes,scrollbars=yes,resizable=yes,dependent=yes,height=500,width=800'`
+* `formProtectSelector`
+  * the jQuery selector to which to attach "submit" listeners - the listener does
+    a synchronous AJAX request to force the AJAX logic to take place before
+    the form submission, preventing submissions while the session is expired
+  * make it a blank string to disable this behavior
+  * *default*: `form[method=post]`
+* `formProtectUrl`
+  * the URL to call to protect form submission
+  * *default*: `'/'`
+
 
 Explanation
 ===========

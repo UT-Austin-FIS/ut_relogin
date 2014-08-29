@@ -9,11 +9,13 @@ TAGS = """
         var $jqUtRelogin = jQuery.noConflict(true);
         $jqUtRelogin.utRelogin({{
             'popupUrl': '{popup_url}',
+            'formProtectUrl': '{form_url}',
         }});
     </script>
 """.format(
     static_url=settings.STATIC_URL,
     popup_url=reverse('ut_relogin_redirect'),
+    form_url=reverse('ut_relogin_form_protection'),
 )
 
 
