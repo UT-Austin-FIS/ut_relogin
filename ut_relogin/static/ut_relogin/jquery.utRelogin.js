@@ -147,17 +147,20 @@ window.utrelogin.postLogin = function(){
         }
         var opts = $.extend({}, defaultOptions, configOptions);
 
-        if (opts.formProtectSelector !== ''){
-            $(opts.formProtectSelector).on('submit', function(e){
-                event.preventDefault();
-                var $form = $(event.target);
-                $.ajax(
-                    url:opts.formProtectUrl,
-                    async: false,
-                    success: function(){ $form.submit(); }
-                });
+        function formHandler(event) {
+            event.preventDefault();
+            var $form = $(event.target);
+            $.ajax({
+                url: opts.formProtectUrl,
+                async: false,
+                success: function(){ $form.submit(); }
             });
         }
+        $(document).ready(function(){
+            if (opts.formProtectSelector !== ''){
+                $(opts.formProtectSelector).on('submit', formHandler);
+            }
+        });
 
         var xhr_open = XMLHttpRequest.prototype.open;
         var xhr_send = XMLHttpRequest.prototype.send;

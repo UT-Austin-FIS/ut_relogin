@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-from django.core.http import HttpResponse
+from django.http import HttpResponse
 from django.views.generic.base import View, TemplateView
 
 DEFAULT_TIMEOUT_SECONDS = 7
