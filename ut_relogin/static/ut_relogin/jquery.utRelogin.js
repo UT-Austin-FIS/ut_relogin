@@ -1,8 +1,37 @@
 /**
- * utRelogin
+ * @fileOverview
+ * A jQuery plugin to detect when the user's UTLogin session has expired and
+ * allow them to relogin without seeing spurious error messages from failed,
+ * same-origin-violating AJAX requests. It MAY also protect form submission.
  *
- * Intercepts all AJAX requests and enables the user to login to UTLogin
- * again if the request fails due to a same-origin error.
+ * @name utRelogin
+ * @author Eric Petersen <epetersen@austin.utexas.edu>
+ * @author Adam Connor <adam.conor@austin.utexas.edu>
+ * @author Todd Graves <tgraves@austin.utexas.edu>
+ * @version 2.0.0
+ * @requires jQuery (developed against 1.11.1, but only requires plugin ability)
+ *
+ * Usage:
+ *
+ * Although it is provided as a jQuery plugin, it is intended to be installed
+ * with a stand-alone version of jQuery, since it only modifies the native
+ * XMLHttpRequest object. Therefore, usage is simple:
+ *
+ * <script src="path/to/jquery-1.11.1.min.js"></script>
+ * <script src="path/to/jquery.utRelogin.js"></script>
+ * <script>
+ *     $jqUtRelogin = $.noConflict(true);
+ *     $jqUtRelogin.utRelogin({
+ *         redirectUrl: 'path/to/relogin/page.html',
+ *         popupOptions: 'options to window.open (see below)',
+ *         showDialog: true,
+ *     });
+ * </script>
+ *
+ * The relogin page should call back to the opening page by invoking
+ * window.opener.utrelogin.postLogin(). This will call all the callback
+ * functions that the original page has added using
+ * window.utrelogin.addPostLoginCallback().
  *
  * See: http://stackoverflow.com/questions/6884616/intercept-all-ajax-calls
  */
@@ -197,8 +226,8 @@ window.utrelogin.postLogin = function(){
                 // we just set here. Let's intercept that modification so we
                 // don't get completely overridden.
                 //
-                // NOTE: This won't work in IE 8, since defineProperty is only
-                // implemented for DOM objects there, and we're modifying a
+                // NOTE: This won't work in IE <9, since defineProperty was
+                // only implemented for DOM objects then, and we're modifying a
                 // native JavaScript object here.
                 Object.defineProperty(this, "onreadystatechange", {
                     configurable: false,
@@ -213,9 +242,10 @@ window.utrelogin.postLogin = function(){
                         return scc;
                     },
                     set: function (newValue) {
-                        // Instead of letting other scripts overwrite our
-                        // handler, let's overwrite the other handler that
-                        // we'll call after doing our thing.
+                        // Instead of letting other scripts like jQuery
+                        // overwrite our handler completely, let's overwrite
+                        // the *other* handler, which we'll call after doing
+                        // our thing.
                         log('changing other onreadystatechange function...');
                         otherOrscHandler = newValue;
                     },
