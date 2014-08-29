@@ -115,13 +115,14 @@ window.utrelogin.callback_registry = {};
             var otherOrscHandler;
 
             var xhr = this;
+            var xhr_data = data;
             function postLogin(){
                 if (opts.showDialog) {
                     dismissDialog();
                 }
                 log('retrying xhr_send...');
                 try {
-                  xhr_send.call(xhr, data);
+                  xhr_send.call(xhr, xhr_data);
                 } catch (err) {
                   log(err);
                 }
