@@ -158,7 +158,7 @@ window.utrelogin.postLogin = function(){
         }
         $(document).ready(function(){
             if (opts.formProtectSelector !== ''){
-                $(opts.formProtectSelector).on('submit', formHandler);
+                $(opts.formProtectSelector).one('submit', formHandler);
             }
         });
 
