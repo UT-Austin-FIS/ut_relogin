@@ -97,7 +97,7 @@ window.utrelogin.postLogin = function(){
      * - showDialog: whether to show a dialog on the source page when opening
      *               the login window
      * - formProtectSelector: the jQuery selector to use for deciding with
-     *                        forms to protect with an synchronous AJAX call
+     *                        forms to protect with an AJAX call
      *                        ('' = no form protection)
      * - formProtectUrl: the URL to call to protect form submission
      *
@@ -150,10 +150,8 @@ window.utrelogin.postLogin = function(){
         function formHandler(event) {
             event.preventDefault();
             var $form = $(event.target);
-            $.ajax({
-                url: opts.formProtectUrl,
-                async: false,
-                success: function(){ $form.submit(); }
+            $.ajax(opts.formProtectUrl, function(){
+                $form.submit();
             });
         }
         $(document).ready(function(){
