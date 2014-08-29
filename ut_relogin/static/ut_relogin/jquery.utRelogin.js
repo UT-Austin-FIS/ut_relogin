@@ -7,7 +7,28 @@ window.utrelogin = {}; // claim a global scope.
  *
  * @type {Object}
  */
-window.utrelogin.callback_registry = {};
+window.utrelogin.callbacks = [];
+
+/**
+ * Function to be called by consuming applications to add callbacks
+ *
+ * @type {Function}
+ */
+window.utrelogin.addCallback = function(fn){
+    window.utrelogin.callbacks.push(fn);
+};
+
+/**
+ * Function to be called by the post-login page
+ *
+ * @type {Function}
+ */
+window.utrelogin.postLogin = function(){
+    for (var i = 0; i < window.utrelogin.callbacks.length; i++) {
+        window.utRelogin.callbacks[i]();
+    }
+    window.utRelogin.callbacks = []; // clear it out
+};
 
 (function(factory, window) {
     'use strict';
@@ -37,6 +58,7 @@ window.utrelogin.callback_registry = {};
         'popupOptions': 'toolbar=yes,scrollbars=yes,resizable=yes,' +
                         'dependent=yes,height=500,width=800',
         'showDialog': true,
+        'callbacks': [],
     };
 
     /**
@@ -114,25 +136,14 @@ window.utrelogin.callback_registry = {};
             var sc_complete = false;
             var otherOrscHandler;
 
-            var xhr = this;
-            var xhr_data = data;
-            function postLogin(){
-                if (opts.showDialog) {
-                    dismissDialog();
-                }
-                log('retrying xhr_send...');
-                try {
-                  xhr_send.call(xhr, xhr_data);
-                } catch (err) {
-                  log(err);
-                }
-            }
-
             function startLogin(){
                 if (opts.showDialog) {
                     showDialog();
+                    window.utrelogin.callbacks.push(dismissDialog);
+                    for (var i = 0; i < opts.callbacks.length; i++) {
+                        window.utrelogin.callbacks.push(opts.callbacks[i]);
+                    }
                 }
-                window.utrelogin.callback_registry.postLogin = postLogin;
                 log('opening login window');
                 window.open(opts.redirectUrl, null, opts.popupOptions);
             }
