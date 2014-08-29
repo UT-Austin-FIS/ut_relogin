@@ -92,7 +92,7 @@ window.utrelogin.callback_registry = {};
         }
         $(document).ready(function(){
             if (opts.formProtectSelector !== ''){
-                $(opts.formProtectSelector).on('submit', formHandler);
+                $(opts.formProtectSelector).one('submit', formHandler);
             }
         });
 
