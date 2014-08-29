@@ -43,5 +43,5 @@ class ReloginRedirect(TemplateView):
 class FormProtectionView(View):
     response = HttpResponse('ok')
 
-    def get(request):
+    def get(self, request):
         return self.response
