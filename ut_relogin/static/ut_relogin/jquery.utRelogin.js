@@ -33,7 +33,7 @@ window.utrelogin.callback_registry = {};
      * - popupOptions: options to window.open to use when opening the new
      *                 window
      * - formProtectSelector: the jQuery selector to use for deciding with
-     *                        forms to protect with an synchronous AJAX call
+     *                        forms to protect with an AJAX call
      * - formProtectUrl: the URL to call to protect form submission
      *
      * @private
@@ -84,10 +84,8 @@ window.utrelogin.callback_registry = {};
         function formHandler(event) {
             event.preventDefault();
             var $form = $(event.target);
-            $.ajax({
-                url: opts.formProtectUrl,
-                async: false,
-                success: function(){ $form.submit(); }
+            $.ajax(opts.formProtectUrl, function(){
+                $form.submit();
             });
         }
         $(document).ready(function(){

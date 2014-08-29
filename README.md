@@ -136,8 +136,8 @@ The configuration options you can pass to $.utRelogin are the following:
   * *default*: `'toolbar=yes,scrollbars=yes,resizable=yes,dependent=yes,height=500,width=800'`
 * `formProtectSelector`
   * the jQuery selector to which to attach "submit" listeners - the listener does
-    a synchronous AJAX request to force the AJAX logic to take place before
-    the form submission, preventing submissions while the session is expired
+    a AJAX request to force the AJAX logic to take place before the form
+    submission, preventing submissions while the session is expired
   * make it a blank string to disable this behavior
   * *default*: `form[method=post]`
 * `formProtectUrl`
