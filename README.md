@@ -77,7 +77,7 @@ Then, install it into your Django project:
 
   1. If you want to write your own page for the popup window, which you need to
      do if you're not using `UTDirectContext`, you should add a URL with the
-     name `ut_relogin_redirect' that exhibits the behavior you want for the
+     name `ut_relogin_redirect` that exhibits the behavior you want for the
      popup window.
 
 Setup - non-Django
