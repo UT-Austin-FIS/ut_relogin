@@ -61,7 +61,7 @@ Then, install it into your Django project:
           # ...
           UT_RELOGIN_CONTEXT = 'mygroup.myproject.myapp.mycontext.MyContextClass'
           UT_RELOGIN_MESSAGE = 'You are now logged in; repeat your previous action.'
-            ```
+          ```
 
     1. Add the URLs to your root URLconf:
           ```python
@@ -69,12 +69,12 @@ Then, install it into your Django project:
           # ...
           import ut_relogin.urls
 
-      urlpatterns = (
-          # ...
-          url(r'^', include(ut_relogin.urls)),
-      )
+          urlpatterns = (
+              # ...
+              url(r'^', include(ut_relogin.urls)),
+          )
+          ```
 
-      ```
   1. If you want to write your own page for the popup window, which you need to
      do if you're not using `UTDirectContext`, you should add a URL with the
      name `ut_relogin_redirect' that exhibits the behavior you want for the
