@@ -8,8 +8,8 @@ synchronous AJAX call to ensure the session is still active.
 
 ## Dependencies
 * `jquery.utRelogin.js`:
+  * jQuery 1.7+ (developed against 1.11.1 (included in repo))
   * IE 9+, Firefox, Chrome, Safari(?), other modern browsers(?)
-  * jQuery 1.7+ (developed against 1.11.1)
 * `ut_relogin`, the Django app:
   * Python 2.6+
   * Django 1.4+
@@ -25,7 +25,7 @@ named 'extra', you can use these `svn:externals` parameters:
 
 > path: extra/ut_relogin
 
-> URL: https://github.com/UT-Austin-FIS/ut_relogin/tags/v0.3/ut_relogin
+> URL: https://github.com/UT-Austin-FIS/ut_relogin/tags/v0.4/ut_relogin
 
 Then, install it into your Django project:
 
