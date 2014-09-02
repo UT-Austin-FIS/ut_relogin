@@ -197,7 +197,7 @@ window.utrelogin.postLogin = function(){
                 '<div>',
                 '<button>Close</button>',
                 '<p>',
-                'Your UTLogin session has expired. ',
+                'Your session has expired. ',
                 'Please log in again in the popup window to continue.',
                 '</p>',
                 '</div>',
