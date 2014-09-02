@@ -150,7 +150,7 @@ window.utrelogin.postLogin = function(){
         function formHandler(event) {
             event.preventDefault();
             var $form = $(event.target);
-            $.ajax(opts.formProtectUrl, function(){
+            $.get(opts.formProtectUrl, function(data){
                 $form.submit();
             });
         }

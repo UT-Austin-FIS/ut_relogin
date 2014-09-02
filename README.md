@@ -9,6 +9,7 @@ synchronous AJAX call to ensure the session is still active.
 ## Dependencies
 * `jquery.utRelogin.js`:
   * IE 9+, Firefox, Chrome, Safari(?), other modern browsers(?)
+  * jQuery 1.7+ (developed against 1.11.1)
 * `ut_relogin`, the Django app:
   * Python 2.6+
   * Django 1.4+
