@@ -314,6 +314,8 @@ window.utrelogin.postLogin = function(){
                         if (self.status === 0){
                             log('same origin error inferred');
                             self._same_origin_error = true;
+                        } else {
+                            window.utrelogin.clearPostLoginCallbacks();
                         }
                     }
 
@@ -324,7 +326,6 @@ window.utrelogin.postLogin = function(){
                         startLogin();
                     } else {
                         log('calling other onreadystatechange handler...');
-                        window.utrelogin.clearPostLoginCallbacks();
                         otherOrscHandler.call(self);
                     }
                 }
