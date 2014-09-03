@@ -57,6 +57,15 @@ window.utrelogin.addPostLoginCallback = function(fn){
 };
 
 /**
+ * Clear out the callback registry
+ *
+ * @type {Function}
+ */
+window.utrelogin.clearPostLoginCallbacks = function(){
+    window.utrelogin.callbacks = [];
+};
+
+/**
  * Function to be called by the post-login page; intended to be accessed via
  * the window.opener object - window.opener.utrelogin.postLogin()
  *
@@ -68,7 +77,7 @@ window.utrelogin.postLogin = function(){
     for (var i = 0; i < window.utrelogin.callbacks.length; i++) {
         window.utrelogin.callbacks[i]();
     }
-    window.utrelogin.callbacks = []; // clear it out
+    window.utrelogin.clearPostLoginCallbacks();
 };
 
 (function(factory, window) {
@@ -315,6 +324,7 @@ window.utrelogin.postLogin = function(){
                         startLogin();
                     } else {
                         log('calling other onreadystatechange handler...');
+                        window.utrelogin.clearPostLoginCallbacks();
                         otherOrscHandler.call(self);
                     }
                 }
