@@ -105,6 +105,8 @@ window.utrelogin.postLogin = function(){
      *                 window
      * - showDialog: whether to show a dialog on the source page when opening
      *               the login window
+     * - autoCloseDialog: whether to close the dialog automatically after
+     *                    log in
      * - formProtectSelector: the jQuery selector to use for deciding with
      *                        forms to protect with an AJAX call
      *                        ('' = no form protection)
@@ -118,6 +120,7 @@ window.utrelogin.postLogin = function(){
         'popupOptions': 'toolbar=yes,scrollbars=yes,resizable=yes,' +
                         'dependent=yes,height=500,width=800',
         'showDialog': true,
+        'autoCloseDialog': false,
         'formProtectSelector': 'form[method=post]',
         'formProtectUrl': '/',
     };
@@ -289,9 +292,13 @@ window.utrelogin.postLogin = function(){
                 if (opts.showDialog) {
                     var $d = createAndShowDialog();
                     window.utrelogin.addPostLoginCallback(function() {
-                        $d.find('p').text(
-                            'You are now logged in - retry your last action'
-                        );
+                        if (opts.autoCloseDialog) {
+                            destroyAndHideLoginDialog();
+                        } else {
+                            $d.find('p').text(
+                                'You are now logged in. Retry your last action.'
+                            );
+                        }
                     });
                 }
                 log('opening login window');

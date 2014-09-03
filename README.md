@@ -138,6 +138,9 @@ The configuration options you can pass to $.utRelogin are the following:
 * `showDialog`
   * whether to show a dialog on the parent page when opening the login window
   * *default*: `true`
+* `autoCloseDialog`
+  * whether to automatically close the dialog on the parent page after logging in
+  * *default*: `false`
 * `formProtectSelector`
   * the jQuery selector to which to attach "submit" listeners - the listener does
     a AJAX request to force the AJAX logic to take place before the form
