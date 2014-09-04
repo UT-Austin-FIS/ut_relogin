@@ -21,7 +21,15 @@ TAGS = """
 
 class UtReloginHeadTagMiddleware(object):
 
+    def get_head_tag_replacement(self):
+        """
+        Get the string that replaces <head> tags in HTML responses. Can be
+        overridden if TAGS is not quite what you're looking for.
+        """
+        return TAGS
+
     def process_response(self, request, response):
         if 'html' in response['Content-Type'].lower():
-            response.content = response.content.replace(u'<head>', TAGS, 1)
+            tags = self.get_head_tag_replacement()
+            response.content = response.content.replace(u'<head>', tags, 1)
         return response
