@@ -15,6 +15,17 @@ synchronous AJAX call to ensure the session is still active.
   * Django 1.4+
   * Optional: A `UTDirectContext` class
 
+## Disclaimer
+This repo is inteded as an upgrade to FIS's existing re-login functionality.
+As such, it is configured with settings that make implementing it in our
+applications as easily as possible.
+
+We do want to share this code with other areas that may need re-login
+functionality in their applications. However, we cannot promise to support any
+feature requests down the line that do not originate from our own applications.
+On the other hand, we do have tagged versions of the code that will not change,
+and anyone can fork this public repo.
+
 Setup - PyPE/Django
 ===================
 
@@ -25,7 +36,7 @@ named 'extra', you can use these `svn:externals` parameters:
 
 > path: extra/ut_relogin
 
-> URL: https://github.com/UT-Austin-FIS/ut_relogin/tags/v0.4/ut_relogin
+> URL: https://github.com/UT-Austin-FIS/ut_relogin/tags/v0.5/ut_relogin
 
 Then, install it into your Django project:
 
@@ -40,7 +51,8 @@ Then, install it into your Django project:
     )
     ```
 
-1. Add the middleware to your `MIDDLEWARE_CLASSES` setting:
+1. Add the middleware to your `MIDDLEWARE_CLASSES` setting, or add your own
+   subclassed version:
       ```python
       # settings.py
       # ...
@@ -151,6 +163,20 @@ The configuration options you can pass to $.utRelogin are the following:
   * the URL to call to protect form submission
   * *default*: `'/'`
 
+
+JavaScript Callbacks
+====================
+
+If you want to do any special handling after login, you can add callback
+functions via `window.utrelogin.addPostLoginCallback()`. The template included
+in the Django app here will call `window.opener.utrelogin.postLogin()`, which
+iterates through the array of all callbacks that have been added since the last
+AJAX call. After calling them all, it clears out the array. This could be used,
+for example, to automatically retry an AJAX call after the user has logged in.
+
+To see it in action, look in the utRelogin plugin itself - it uses this
+functionality to automatically update or close the dialog in the parent window
+after login.
 
 Explanation
 ===========
