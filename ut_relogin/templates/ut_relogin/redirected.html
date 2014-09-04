@@ -4,28 +4,30 @@
     <h2>You have been successfully logged in.<h2>
   </div>
   <div id="info">
-    <p>{{ msg }}</p>
-    <p>
+    <p id="utrelogin-msg">{{ msg }}</p>
+    <p id="utrelogin-countdown">
       This window will close automatically in
-      <span id="countdown">{{ timeout }}</span> seconds.
+      <span id="utrelogin-timeout">{{ timeout }}</span> seconds.
       <a href="#" id="stop-countdown">(Stop)</a>
     </p>
   </div>
 
   <script type="text/javascript">
-    (function () {
-      try {
-        window.opener.utrelogin.postLogin();
-      } catch (err) {
-        console.info('unable to do post-login');
+  (function () {
+      if (!window.opener) {
+          document.getElementById('utrelogin-countdown').innerHTML =
+              'This window may be closed at any time.';
+          return null;
       }
+
+      window.opener.utrelogin.postLogin();
 
       var timeLeft = {{ timeout }},
           cinterval;
 
       var timeDec = function (){
           timeLeft--;
-          document.getElementById('countdown').innerHTML = timeLeft;
+          document.getElementById('utrelogin-timeout').innerHTML = timeLeft;
           if(timeLeft === 0){
               clearInterval(cinterval);
               window.close();
@@ -38,7 +40,7 @@
               .addEventListener('click', function() {
                   clearInterval(cinterval);
               });
-    })();
+  })();
   </script>
 
 {% endblock relogin_content %}
