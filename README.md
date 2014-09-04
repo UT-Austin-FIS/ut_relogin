@@ -16,9 +16,10 @@ synchronous AJAX call to ensure the session is still active.
   * Optional: A `UTDirectContext` class
 
 ## Disclaimer
-This repo is inteded as an upgrade to FIS's existing re-login functionality.
+
+This repo is intended as an upgrade to FIS's existing re-login functionality.
 As such, it is configured with settings that make implementing it in our
-applications as easily as possible.
+applications as easy as possible.
 
 We do want to share this code with other areas that may need re-login
 functionality in their applications. However, we cannot promise to support any
