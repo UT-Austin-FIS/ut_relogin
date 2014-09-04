@@ -293,7 +293,7 @@ window.utrelogin.postLogin = function(){
                     var $d = createAndShowDialog();
                     window.utrelogin.addPostLoginCallback(function() {
                         if (opts.autoCloseDialog) {
-                            destroyAndHideLoginDialog();
+                            destroyAndHideLoginDialog($d);
                         } else {
                             $d.find('p').text(
                                 'You are now logged in. Retry your last action.'
