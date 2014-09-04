@@ -302,7 +302,7 @@ window.utrelogin.postLogin = function(){
                     });
                 }
                 log('opening login window');
-                window.open(opts.popupUrl, null, opts.popupOptions);
+                window.open(opts.popupUrl, 'UTReloginWindow', opts.popupOptions);
             }
 
             function state_change_closure(self, old){
