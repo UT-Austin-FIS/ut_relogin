@@ -163,6 +163,9 @@ The configuration options you can pass to $.utRelogin are the following:
 * `formProtectUrl`
   * the URL to call to protect form submission
   * *default*: `'/'`
+* `formProtectRetry`
+  * whether to attempt to automatically resubmit a protected form after login
+  * *default*: `false`
 
 
 JavaScript Callbacks

@@ -25,8 +25,9 @@
  *         popupUrl: 'path/to/relogin/page.html',
  *         popupOptions: 'options to window.open (see below)',
  *         showDialog: true,
- *         formProtectUrl: 'path/to/any/page.html',
  *         formProtectSelector: 'form[method=post]'
+ *         formProtectUrl: 'path/to/any/page.html',
+ *         formProtectRetry: true,
  *     });
  * </script>
  *
@@ -111,6 +112,7 @@ window.utrelogin.postLogin = function(){
      *                        forms to protect with an AJAX call
      *                        ('' = no form protection)
      * - formProtectUrl: the URL to call to protect form submission
+     * - formProtectRetry: whether to resubmit a protected form after login
      *
      * @private
      * @type {object}
@@ -123,6 +125,7 @@ window.utrelogin.postLogin = function(){
         'autoCloseDialog': false,
         'formProtectSelector': 'form[method=post]',
         'formProtectUrl': '/',
+        'formProtectRetry': false,
     };
 
     /**
@@ -162,8 +165,16 @@ window.utrelogin.postLogin = function(){
         function formHandler(event) {
             event.preventDefault();
             var $form = $(event.target);
-            $.get(opts.formProtectUrl, function(data){
+            var submitForm = function(){
                 $form.submit();
+            };
+            if (opts.formProtectRetry) {
+                window.utrelogin.addPostLoginCallback(submitForm);
+            }
+            $.ajax({
+                type: 'GET',
+                url: opts.formProtectUrl,
+                success: submitForm,
             });
         }
         $(document).ready(function(){
