@@ -248,7 +248,6 @@ window.utrelogin.postLogin = function(){
                 'display': 'block'
             });
 
-            log('adding dialog to body');
             $dialog.append($dialogBackground);
             $dialog.append($contentDiv);
             $('body').append($dialog);
@@ -289,7 +288,6 @@ window.utrelogin.postLogin = function(){
             this._async = async;
             this._same_origin_error = null;
             this._current_error = undefined;
-            log('calling original XMLHttpRequest.open');
             xhr_open.call(this, method, url, async, user, pass);
         }
 
@@ -312,7 +310,6 @@ window.utrelogin.postLogin = function(){
                         }
                     });
                 }
-                log('opening login window');
                 window.open(opts.popupUrl, 'UTReloginWindow', opts.popupOptions);
             }
 
@@ -323,14 +320,10 @@ window.utrelogin.postLogin = function(){
                 otherOrscHandler = old;
 
                 function state_change(){
-                    log('in state_change - readyState: ' + self.readyState);
-
                     if (self.readyState === 4){
-                        log('state changes are complete');
                         sc_complete = true;
 
                         if (self.status === 0){
-                            log('same origin error inferred');
                             self._same_origin_error = true;
                         } else {
                             window.utrelogin.clearPostLoginCallbacks();
@@ -339,11 +332,10 @@ window.utrelogin.postLogin = function(){
 
                     if (self._same_origin_error){
                         delete self._current_error; // we can assume this was the error
-                        log('aborting request');
+                        log('same origin error inferred; aborting request');
                         self.abort();
                         startLogin();
                     } else {
-                        log('calling other onreadystatechange handler...');
                         otherOrscHandler.call(self);
                     }
                 }
@@ -353,7 +345,6 @@ window.utrelogin.postLogin = function(){
             this._data = data;
 
             if (this._async){
-                log('adding our onreadystatechange function');
                 this.onreadystatechange = scc;
 
                 // jQuery will set onreadystatechange *after* calling send,
@@ -373,7 +364,6 @@ window.utrelogin.postLogin = function(){
                         // some fancy native method calling thing?
                         //
                         // Let's return something just in case.
-                        log('getting onreadystatechange...hello!');
                         return scc;
                     },
                     set: function (newValue) {
@@ -381,24 +371,20 @@ window.utrelogin.postLogin = function(){
                         // overwrite our handler completely, let's overwrite
                         // the *other* handler, which we'll call after doing
                         // our thing.
-                        log('changing other onreadystatechange function...');
                         otherOrscHandler = newValue;
                     },
                 });
             }
 
             try {
-                log('calling original XMLHttpRequest.send');
                 xhr_send.call(this, data);
             } catch (err) {
-                log('caught an error');
                 // we need to defer action on this -- if it is a same origin error,
                 // we can ignore it if login is triggered.
                 this._current_error = err;
             } finally {
                 // firefox doesn't fire on synchronous calls, but we need scc called
                 if (!(this._async || sc_complete)){
-                    log('request is not async OR state change is not complete');
                     no_call = true; // because user code
                     scc();
                 }
