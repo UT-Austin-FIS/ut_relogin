@@ -143,7 +143,6 @@ window.utrelogin.postLogin = function(){
     function log(msg) {
         if (showLog) {
             var logTime = new Date().getTime();
-            console.info('==> [' + logTime + '] (jQuery.utRelogin) --> ' + msg);
             var prefix = '==> [' + logTime + '] (jQuery.utRelogin) --> ';
             if (typeof msg === 'string'){
                 console.info(prefix + msg);
