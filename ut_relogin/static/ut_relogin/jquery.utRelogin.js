@@ -136,14 +136,21 @@ window.utrelogin.postLogin = function(){
     /**
      * Log messages consistently.
      *
-     * @param {String} msg
-     *     Message to log
+     * @param {String,Object} msg
+     *     Message or object to log
      * @private
      */
     function log(msg) {
         if (showLog) {
             var logTime = new Date().getTime();
             console.info('==> [' + logTime + '] (jQuery.utRelogin) --> ' + msg);
+            var prefix = '==> [' + logTime + '] (jQuery.utRelogin) --> ';
+            if (typeof msg === 'string'){
+                console.info(prefix + msg);
+            } else {
+                console.info(prefix + '[object: ' + msg + ']...');
+                console.info(msg);
+            }
         }
     }
 
