@@ -1,31 +1,31 @@
 ut_relogin
 ==========
 
-Catches failed AJAX requests for resources under UTLogin where there failure is
+Catches failed AJAX requests for resources under UTLogin where the failure is
 due to an expired session, allowing the user to login again to retry the action
-that triggered the original AJAX request. Also protects POSTs by making a
-synchronous AJAX call to ensure the session is still active.
+that triggered the original AJAX request. Also protects POSTs by making an AJAX
+call to ensure the session is still active, and submitting the form on success.
+
+## Disclaimer
+
+This repo is designed to be used as an upgrade to FIS's existing re-login
+functionality. As such, it is configured with settings that make implementing
+it in our applications as easy as possible.
+
+We do want to share this code with other areas that may need re-login
+functionality in their applications. However, we cannot promise to support any
+feature requests that do not originate from our own applications. On the other
+hand, we do have tagged versions of the code that will not change, and anyone
+can fork this public repo.
 
 ## Dependencies
 * `jquery.utRelogin.js`:
   * jQuery 1.7+ (developed against 1.11.1 (included in repo))
-  * IE 9+, Firefox, Chrome, Safari(?), other modern browsers(?)
+  * IE 9+, Firefox, Chrome, Safari, other modern browsers
 * `ut_relogin`, the Django app:
   * Python 2.6+
   * Django 1.4+
   * Optional: A `UTDirectContext` class
-
-## Disclaimer
-
-This repo is intended as an upgrade to FIS's existing re-login functionality.
-As such, it is configured with settings that make implementing it in our
-applications as easy as possible.
-
-We do want to share this code with other areas that may need re-login
-functionality in their applications. However, we cannot promise to support any
-feature requests down the line that do not originate from our own applications.
-On the other hand, we do have tagged versions of the code that will not change,
-and anyone can fork this public repo.
 
 Setup - PyPE/Django
 ===================
@@ -37,7 +37,7 @@ named 'extra', you can use these `svn:externals` parameters:
 
 > path: extra/ut_relogin
 
-> URL: https://github.com/UT-Austin-FIS/ut_relogin/tags/v0.5/ut_relogin
+> URL: https://github.com/UT-Austin-FIS/ut_relogin/tags/v1.0/ut_relogin
 
 Then, install it into your Django project:
 
@@ -66,19 +66,18 @@ Then, install it into your Django project:
 
 1. Set up a URL to be opened in the popup window after login:
 
-  1. If you want to use the template and URL provided in this app, you
-     must provide a context class and message, and install our URLconf.
+  1. If you want to use the template and URLconf provided in this app, you
+     must provide a context class and install our URLconf.
 
-    1. Tell `ut_relogin` what context class (that inherits from
-       `UTDirectContext`) and message to use:
+    1. Tell `ut_relogin` what context class that inherits from
+       `UTDirectContext` to use:
           ```python
           # settings.py
           # ...
           UT_RELOGIN_CONTEXT = 'mygroup.myproject.myapp.mycontext.MyContextClass'
-          UT_RELOGIN_MESSAGE = 'You are now logged in; repeat your previous action.'
           ```
 
-    1. Add the URLs to your root URLconf:
+    1. Add our URLconf to your root URLconf:
           ```python
           # urls.py
           # ...
@@ -86,7 +85,7 @@ Then, install it into your Django project:
 
           urlpatterns = (
               # ...
-              url(r'^', include(ut_relogin.urls)),
+              url(r'^ut_relogin/', include(ut_relogin.urls)),
           )
           ```
 
@@ -101,11 +100,11 @@ Setup - non-Django
 
 The resources in this repo can be used in any context. Essentially, this
 project is an "app-ification" of the `jquery.utRelogin.js` plugin that was done
-to make it easier to reliably inject it into existing Django apps.
+to make it easier to reliably inject it into our existing Django apps.
 
 If you look at the middleware in `ut_relogin/middleware.py`, you'll see the
 `<script>` tags necessary to add this plugin to your own web application in
-whatever language (webAgent, PHP, Java, etc.).
+whatever language you're using (webAgent, PHP, Java, etc.).
 
 Ideally, you'd include this repo with `svn:externals` if you're using Subversion,
 or perhaps with subtree merges if you're using git. If you're adding `ut_relogin`
@@ -152,16 +151,21 @@ The configuration options you can pass to $.utRelogin are the following:
   * whether to show a dialog on the parent page when opening the login window
   * *default*: `true`
 * `autoCloseDialog`
-  * whether to automatically close the dialog on the parent page after logging in
+  * whether to automatically close the dialog on the parent page after logging in, if
+    `showDialog` is `true`
   * *default*: `false`
 * `formProtectSelector`
   * the jQuery selector to which to attach "submit" listeners - the listener does
     a AJAX request to force the AJAX logic to take place before the form
     submission, preventing submissions while the session is expired
   * make it a blank string to disable this behavior
+  * if binding the submit listener to your forms at document-ready time is not
+    sufficient, there is a window-global function you can call in your own
+    JavaScript when appropriate: `window.utrelogin.rebindFormProtectHandlers()`.
   * *default*: `form[method=post]`
 * `formProtectUrl`
   * the URL to call to protect form submission
+  * can be anything; our Django app just returns a plain-text response of `'ok'`
   * *default*: `'/'`
 * `formProtectRetry`
   * whether to attempt to automatically resubmit a protected form after login
@@ -182,8 +186,8 @@ To see it in action, look in the utRelogin plugin itself - it uses this
 functionality to automatically update or close the dialog in the parent window
 after login.
 
-Explanation
-===========
+Explanation/Justification
+=========================
 
 Before the transition to [UTLogin](http://www.utexas.edu/its/utlogin/), under
 [Central Web Authentication](http://www.utexas.edu/its/utlogin/Compare%20to%20CWA)
@@ -217,10 +221,10 @@ would be lost, and the destination page would be responsible for dealing with
 the unexpected GET from the logon form.
 
 The older `utRelogin` plugin would intercept form submissions and AJAX requests
-when the response from the host was the login page. It would put up a jQuery
-modal with the login page, let the user enter their credentials, and then close
-the modal and re-submit the original request. This no longer works under
-UTLogin for reasons discussed in the next section.
+when the response from the host was the login page. It would put up a modal div
+with the login page embedded in an iframe, let the user enter their
+credentials, and then close the modal and re-submit the original request. This
+no longer works under UTLogin for reasons discussed in the next section.
 
 ## The New Way: UTLogin
 
@@ -229,7 +233,7 @@ There are two relevant, major differences in behavior under UTLogin:
   has something installed to connect it to UTLogin, the only place that users
   will be getting login pages is from the central UTLogin host.
 * The login page doesn't allow itself to be embedded in an iframe, due to its
-  `X-Frame-Options: Deny` HTTP header.
+  `X-Frame-Options: Deny` HTTP header. This is a security feature.
 
 Any request made on a host under UTLogin passes through the UTLogin agent
 software. If a valid session is detected, the request is passed along
@@ -248,16 +252,22 @@ agent on the original host grabs the credentials from the POST body, sets a
 cookie, and redirects the user to their original destination, using the
 original HTTP verb and POST or GET data.
 
+For multi-part POST bodies that contain files, not all of the POST data will be
+forwarded to the application after redirect. `ut_relogin` can help with this
+situation by intercepting form submissions and firing an AJAX call before allow
+the submission to continue. If the user's session has expired, the re-login
+flow described below will take place.
+
 ### AJAX
 
 If an application attempts to make an AJAX request after the user's session
-expires, the UTLogin machinery will redirect the request to the login host,
-which is a cross-domain request that the browser will prohibit.
+expires, the UTLogin machinery will redirect the request to the login host;
+this is a cross-domain request that the browser will prohibit.
 
 Similarly, although most users will have already done a normal request to the
 host to get the JavaScript code that does AJAX requests, it's also possible
 that the first request to a host **after** login in is an AJAX request. For
-example, the user could have two windows open with resources from two different
+example, the user could have two windows open with pages from two different
 UTLogin servers. Say their session expires and they re-authenticate on host A;
 if they switch to their host B window and take an action on the still-loaded
 page that triggers an AJAX request, that request will fail, since the redirect

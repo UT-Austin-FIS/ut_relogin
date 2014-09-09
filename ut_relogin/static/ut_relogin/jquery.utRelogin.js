@@ -4,18 +4,20 @@
  * allow them to relogin without seeing spurious error messages from failed,
  * same-origin-violating AJAX requests. It can also protect form submission.
  *
+ * https://github.com/UT-Austin-FIS/ut_relogin
+ *
  * @name utRelogin
  * @author Eric Petersen <epetersen@austin.utexas.edu>
  * @author Adam Connor <adam.conor@austin.utexas.edu>
  * @author Todd Graves <tgraves@austin.utexas.edu>
  * @version 2.0.0
- * @requires jQuery (developed against 1.11.1)
+ * @requires jQuery 1.7+ (developed against 1.11.1)
  *
  * Usage:
  *
  * Although it is provided as a jQuery plugin, it is intended to be installed
- * with a stand-alone version of jQuery, since it only modifies the native
- * XMLHttpRequest object. Therefore, usage is simple:
+ * with a stand-alone version of jQuery, since its primary purpose is to modify
+ * the browser's native XMLHttpRequest object. Therefore, usage is simple:
  *
  * <script src="path/to/jquery-1.11.1.min.js"></script>
  * <script src="path/to/jquery.utRelogin.js"></script>
@@ -25,15 +27,16 @@
  *         popupUrl: 'path/to/relogin/page.html',
  *         popupOptions: 'options to window.open (see below)',
  *         showDialog: true,
+ *         autoCloseDialog: false,
  *         formProtectSelector: 'form[method=post]'
  *         formProtectUrl: 'path/to/any/page.html',
- *         formProtectRetry: true,
+ *         formProtectRetry: false,
  *     });
  * </script>
  *
- * The relogin page should call back to the opening page by invoking
+ * The relogin target page should call back to the opening page by invoking
  * window.opener.utrelogin.postLogin(). This will call all the callback
- * functions that the original page has added using
+ * functions that the original page has added via
  * window.utrelogin.addPostLoginCallback().
  *
  * See: http://stackoverflow.com/questions/6884616/intercept-all-ajax-calls
@@ -107,20 +110,7 @@ window.utrelogin.postLogin = function(){
     'use strict';
 
     /**
-     * utRelogin options and default values
-     * - popupUrl: the URL to open in the new window to trigger the UTLogin
-     *             cycle
-     * - popupOptions: options to window.open to use when opening the new
-     *                 window
-     * - showDialog: whether to show a dialog on the source page when opening
-     *               the login window
-     * - autoCloseDialog: whether to close the dialog automatically after
-     *                    log in
-     * - formProtectSelector: the jQuery selector to use for deciding with
-     *                        forms to protect with an AJAX call
-     *                        ('' = no form protection)
-     * - formProtectUrl: the URL to call to protect form submission
-     * - formProtectRetry: whether to resubmit a protected form after login
+     * utRelogin options and default values - see README
      *
      * @private
      * @type {object}
