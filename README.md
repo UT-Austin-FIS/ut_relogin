@@ -129,7 +129,7 @@ Here's what it should look like:
     var $jqUtRelogin = jQuery.noConflict(true);
     $jqUtRelogin.utRelogin({
         'popupUrl': 'url/to/your/redirect/page.html',
-        'formUrl': 'url/to/any/page.html'
+        'formProtectUrl': 'url/to/any/page.html'
     });
   </script>
 

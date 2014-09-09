@@ -42,6 +42,14 @@
 window.utrelogin = {}; // claim a global scope.
 
 /**
+ * Allow consuming applications to re-bind form protection handlers to any
+ * forms that may have shown up after document-ready.
+ *
+ * @type {Function}
+ */
+window.utrelogin.rebindFormProtectHandlers = function(){};
+
+/**
  * Callback registry; needs to live at global scope
  *
  * @type {Object}
@@ -183,11 +191,19 @@ window.utrelogin.postLogin = function(){
                 success: submitForm,
             });
         }
-        $(document).ready(function(){
+        function bindHandlers(){
             if (opts.formProtectSelector !== ''){
-                $(opts.formProtectSelector).one('submit', formHandler);
+                $(opts.formProtectSelector).each(function(i, elem){
+                    var $f = $(this);
+                    if (!$f.data('utrelogin_handler_bound')){
+                        $f.on('submit', formHandler);
+                        $f.data('utrelogin_handler_bound', true);
+                    }
+                });
             }
-        });
+        }
+        $(document).ready(bindHandlers);
+        window.utrelogin.rebindFormProtectHandlers = bindHandlers;
 
         var xhr_open = XMLHttpRequest.prototype.open;
         var xhr_send = XMLHttpRequest.prototype.send;
