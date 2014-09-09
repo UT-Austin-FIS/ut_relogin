@@ -8,7 +8,6 @@
     <p id="utrelogin-countdown">
       This window will close automatically in
       <span id="utrelogin-timeout">{{ timeout }}</span> seconds.
-      <a href="#" id="stop-countdown">(Stop)</a>
     </p>
   </div>
 
@@ -35,11 +34,6 @@
       };
 
       cinterval = setInterval(timeDec, 1000);
-
-      document.getElementById('stop-countdown')
-              .addEventListener('click', function() {
-                  clearInterval(cinterval);
-              });
   })();
   </script>
 
