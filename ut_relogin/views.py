@@ -21,13 +21,10 @@ class ReloginRedirect(TemplateView):
 
     def get_context_data(self, **kwargs):
         ctx = super(ReloginRedirect, self).get_context_data(**kwargs)
-        try:
+        if hasattr(settings, 'UT_RELOGIN_MESSAGE'):
             msg = settings.UT_RELOGIN_MESSAGE
-        except AttributeError:
-            raise ImproperlyConfigured(
-                'You must add a UT_RELOGIN_MESSAGE to your settings. Example: '
-                'We have refreshed your login.  Thank you.'
-            )
+        else:
+            msg = ''
         ctx.update({
             'msg': msg,
             'timeout': DEFAULT_TIMEOUT_SECONDS,
