@@ -194,7 +194,7 @@ window.utrelogin.postLogin = function(){
         function bindHandlers(){
             if (opts.formProtectSelector !== ''){
                 $(opts.formProtectSelector).each(function(i, elem){
-                    var $f = $(this);
+                    var $f = $(elem);
                     if (!$f.data('utrelogin_handler_bound')){
                         $f.on('submit', formHandler);
                         $f.data('utrelogin_handler_bound', true);
