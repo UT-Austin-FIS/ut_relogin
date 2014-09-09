@@ -242,8 +242,8 @@ window.utrelogin.postLogin = function(){
                 '<div>',
                 '<button>Close</button>',
                 '<p>',
-                'Your session has expired. ',
-                'Please log in again in the popup window to continue.',
+                'Your session expired after 60 minutes of inactivity. ',
+                'Use the UTLogin page to return to the application.',
                 '</p>',
                 '</div>',
                 '</div>'
@@ -327,7 +327,7 @@ window.utrelogin.postLogin = function(){
                             destroyAndHideLoginDialog($d);
                         } else {
                             $d.find('p').text(
-                                'You are now logged in. Retry your last action.'
+                                'Login successful. Repeat your last action.'
                             );
                         }
                     });

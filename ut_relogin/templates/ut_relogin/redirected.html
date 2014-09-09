@@ -1,10 +1,14 @@
 {{ utd_header }}
+
 {% block relogin_content %}
+
   <div id="summary">
-    <h2>You have been successfully logged in.<h2>
+    <h2>Login successful.</h2>
   </div>
   <div id="info">
+  {% if msg %}
     <p id="utrelogin-msg">{{ msg }}</p>
+  {% endif %}
     <p id="utrelogin-countdown">
       This window will close automatically in
       <span id="utrelogin-timeout">{{ timeout }}</span> seconds.
@@ -14,9 +18,10 @@
   <script type="text/javascript">
   (function () {
       if (!window.opener) {
+          // Don't attempt anything if this page wasn't opened programmatically.
           document.getElementById('utrelogin-countdown').innerHTML =
-              'This window may be closed at any time.';
-          return null;
+              'No action is required.';
+          return;
       }
 
       window.opener.utrelogin.postLogin();
@@ -38,4 +43,5 @@
   </script>
 
 {% endblock relogin_content %}
+
 {{ utd_footer }}
