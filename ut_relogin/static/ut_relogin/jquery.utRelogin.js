@@ -169,8 +169,22 @@ window.utrelogin.postLogin = function(){
         function formHandler(event) {
             event.preventDefault();
             var $form = $(event.target);
+
+            // See if we should submit by clicking a button or by direct
+            // submission, in case there is no button.
+            var submitViaClick = false;
+            var $btn = $form.data('ut-relogin-btn-clicked');
+            if ($btn && $btn.length){
+                submitViaClick = true;
+            }
+            $form.data('ut-relogin-btn-clicked', null);
+
             var submitForm = function(){
-                $form.submit();
+                if (submitViaClick){
+                    $btn.click();
+                } else {
+                    $form.submit();
+                }
             };
             if (opts.formProtectRetry) {
                 window.utrelogin.addPostLoginCallback(submitForm);
@@ -185,9 +199,16 @@ window.utrelogin.postLogin = function(){
             if (opts.formProtectSelector !== ''){
                 $(opts.formProtectSelector).each(function(i, elem){
                     var $f = $(elem);
+                    var $btns = $f.find(':button[type=submit]');
                     if (!$f.data('utrelogin_handler_bound')){
                         $f.one('submit', formHandler);
                         $f.data('utrelogin_handler_bound', true);
+                        // Keep track of whether a button triggered the
+                        // submission, in case it has a name and value that
+                        // need to be submitted.
+                        $btns.on('click', function(event){
+                            $f.data('ut-relogin-btn-clicked', $(event.target));
+                        });
                     }
                 });
             }
