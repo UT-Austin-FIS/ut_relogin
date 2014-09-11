@@ -221,7 +221,7 @@ window.utrelogin.postLogin = function(){
 
         function createAndShowDialog(){
             if ($('#utRelogin-dialog').size()) {
-                return;
+                return $('utRelogin-dialog');
             }
 
             var Z_INDEX = 9999999;
