@@ -28,7 +28,7 @@ can fork this public repo.
   * Optional: A `UTDirectContext` class
 
 ## Changelog
-* master:
+* v1.1:
   * Forms submitted by buttons with name/value attributes should now be hanlded
     correctly.
   * Returning parent page dialog object if it already exists. Fixes the case
@@ -47,7 +47,7 @@ named 'extra', you can use these `svn:externals` parameters:
 
 > path: extra/ut_relogin
 
-> URL: https://github.com/UT-Austin-FIS/ut_relogin/tags/v1.0/ut_relogin
+> URL: https://github.com/UT-Austin-FIS/ut_relogin/tags/v1.1/ut_relogin
 
 Then, install it into your Django project:
 
