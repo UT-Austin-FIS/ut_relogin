@@ -199,7 +199,7 @@ window.utrelogin.postLogin = function(){
             if (opts.formProtectSelector !== ''){
                 $(opts.formProtectSelector).each(function(i, elem){
                     var $f = $(elem);
-                    var $btns = $f.find(':button[type=submit]');
+                    var $btns = $f.find('input[type="submit"], button[type="submit"]');
                     if (!$f.data('utrelogin_handler_bound')){
                         $f.one('submit', formHandler);
                         $f.data('utrelogin_handler_bound', true);
