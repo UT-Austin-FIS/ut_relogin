@@ -27,6 +27,16 @@ can fork this public repo.
   * Django 1.4+
   * Optional: A `UTDirectContext` class
 
+## Changelog
+* master:
+  * Forms submitted by buttons with name/value attributes should now be hanlded
+    correctly.
+  * Returning parent page dialog object if it already exists. Fixes the case
+    where the relogin popup is opened twice and autoCloseDialog is true;
+    previously you'd get a JS error when running the callbacks, since the
+    dialog it was trying to close was undefined.
+* v1.0: first stable release
+
 Setup - PyPE/Django
 ===================
 
