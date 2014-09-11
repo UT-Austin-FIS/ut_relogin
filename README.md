@@ -29,7 +29,7 @@ can fork this public repo.
 
 ## Changelog
 * v1.2:
-  * Made the submit button selector include <input> elements, too
+  * Made the submit button selector include input elements, too
 * v1.1:
   * Forms submitted by buttons with name/value attributes should now be hanlded
     correctly.
