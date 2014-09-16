@@ -1,10 +1,13 @@
 from django.conf import settings
 from django.core.urlresolvers import reverse
 
+# module-level timestamp for cache-busting
+_TIMESTAMP = datetime.now().strftime('%Y%m%d%H%M')
+
 TAGS_TEMPLATE = """
 <head>
-    <script src="{static_url}ut_relogin/jquery-1.11.1.min.js"></script>
-    <script src="{static_url}ut_relogin/jquery.utRelogin.js"></script>
+    <script src="{static_url}ut_relogin/jquery-1.11.1.min.js{cache_bust}"></script>
+    <script src="{static_url}ut_relogin/jquery.utRelogin.js{cache_bust}"></script>
     <script>
         var $jqUtRelogin = jQuery.noConflict(true);
         $jqUtRelogin.utRelogin({{
@@ -27,6 +30,7 @@ class UtReloginHeadTagMiddleware(object):
             static_url=settings.STATIC_URL,
             popup_url=reverse('ut_relogin_redirect'),
             form_url=reverse('ut_relogin_form_protection'),
+            cache_bust='?version={0}'.format(_TIMESTAMP),
         )
 
     def process_response(self, request, response):
