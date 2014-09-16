@@ -21,13 +21,21 @@ can fork this public repo.
 ## Dependencies
 * `jquery.utRelogin.js`:
   * jQuery 1.7+ (developed against 1.11.1 (included in repo))
-  * IE 9+, Firefox, Chrome, Safari, other modern browsers
+  * IE 9+, Firefox, Chrome - **NOT COMPLETELY COMPATIBLE WITH SAFARI**
+    * Form protection does not currently work in Safari, nor will AJAX calls
+      made with jQuery, or other frameworks that override onreadystatechange
+      **after** calling xhr.send()
 * `ut_relogin`, the Django app:
   * Python 2.6+
   * Django 1.4+
   * Optional: A `UTDirectContext` class
 
 ## Changelog
+* v1.3:
+  * Only attempting to modify property descriptors of xhr.onreadystatechange if
+    supported by the browser. Safari makes xhr.onreadystatechange
+    non-configurable before we can do anything about it, so it is unsupported.
+  * Adding a cache-busting query string to the script tags in the middleware
 * v1.2:
   * Made the submit button selector include input elements, too
 * v1.1:
@@ -49,7 +57,7 @@ named 'extra', you can use these `svn:externals` parameters:
 
 > path: extra/ut_relogin
 
-> URL: https://github.com/UT-Austin-FIS/ut_relogin/tags/v1.2/ut_relogin
+> URL: https://github.com/UT-Austin-FIS/ut_relogin/tags/v1.3/ut_relogin
 
 Then, install it into your Django project:
 

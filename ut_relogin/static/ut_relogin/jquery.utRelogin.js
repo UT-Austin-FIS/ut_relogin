@@ -142,7 +142,7 @@ window.utrelogin.postLogin = function(){
         if (showLog) {
             var logTime = new Date().getTime();
             var prefix = '==> [' + logTime + '] (jQuery.utRelogin) --> ';
-            if (typeof msg === 'string'){
+            if (typeof msg === 'string') {
                 console.info(prefix + msg);
             } else {
                 console.info(prefix + '[object: ' + msg + ']...');
@@ -150,6 +150,29 @@ window.utrelogin.postLogin = function(){
             }
         }
     }
+
+    /**
+     * Check whether the browser supports setting property descriptors on an
+     * XMLHttpRequest instance. Most browsers do, but IE <9 and Safari 5, 6,
+     * and 7 do not. The result of this check determines how/if we deal with
+     * relogin.
+     *
+     * @private
+     * @type {boolean}
+     */
+    var canConfigureXhrOrsc = (function(){
+        var canConfigure = true;
+        var xhr = new XMLHttpRequest();
+        // In Firefox, and maybe other browsers, we need to open the request
+        // for xhr.onreadystatechange to exist at all.
+        xhr.open('GET', '/', true);
+        var props = Object.getOwnPropertyDescriptor(xhr, 'onreadystatechange');
+        if (props && props.hasOwnProperty('configurable')) {
+            canConfigure = props.configurable;
+        }
+        xhr.abort();
+        return canConfigure;
+    })();
 
     /**
      * Main function of the module. Call this to set it up.
@@ -174,13 +197,13 @@ window.utrelogin.postLogin = function(){
             // submission, in case there is no button.
             var submitViaClick = false;
             var $btn = $form.data('ut-relogin-btn-clicked');
-            if ($btn && $btn.length){
+            if ($btn && $btn.length) {
                 submitViaClick = true;
             }
             $form.data('ut-relogin-btn-clicked', null);
 
             var submitForm = function(){
-                if (submitViaClick){
+                if (submitViaClick) {
                     $btn.click();
                 } else {
                     $form.submit();
@@ -200,7 +223,7 @@ window.utrelogin.postLogin = function(){
                 $(opts.formProtectSelector).each(function(i, elem){
                     var $f = $(elem);
                     var $btns = $f.find('input[type="submit"], button[type="submit"]');
-                    if (!$f.data('utrelogin_handler_bound')){
+                    if (!$f.data('utrelogin_handler_bound')) {
                         $f.one('submit', formHandler);
                         $f.data('utrelogin_handler_bound', true);
                         // Keep track of whether a button triggered the
@@ -347,23 +370,23 @@ window.utrelogin.postLogin = function(){
             }
 
             function state_change_closure(self, old){
-                if (!old){
+                if (!old) {
                     old = function(){};
                 }
                 otherOrscHandler = old;
 
                 function state_change(){
-                    if (self.readyState === 4){
+                    if (self.readyState === 4) {
                         sc_complete = true;
 
-                        if (self.status === 0){
+                        if (self.status === 0) {
                             self._same_origin_error = true;
                         } else {
                             window.utrelogin.clearPostLoginCallbacks();
                         }
                     }
 
-                    if (self._same_origin_error){
+                    if (self._same_origin_error) {
                         delete self._current_error; // we can assume this was the error
                         log('same origin error inferred; aborting request');
                         self.abort();
@@ -377,36 +400,41 @@ window.utrelogin.postLogin = function(){
 
             this._data = data;
 
-            if (this._async){
+            if (this._async) {
                 this.onreadystatechange = scc;
 
                 // jQuery will set onreadystatechange *after* calling send,
-                // which would normal replace the onreadystatechange function
+                // which would normally replace the onreadystatechange function
                 // we just set here. Let's intercept that modification so we
                 // don't get completely overridden.
                 //
                 // NOTE: This won't work in IE <9, since defineProperty was
                 // only implemented for DOM objects then, and we're modifying a
                 // native JavaScript object here.
-                Object.defineProperty(this, "onreadystatechange", {
-                    configurable: false,
-                    enumerable: false,
-                    get: function () {
-                        // It seems that this doesn't actually get called,
-                        // perhaps since the native XMLHttpRequest.send does
-                        // some fancy native method calling thing?
-                        //
-                        // Let's return something just in case.
-                        return scc;
-                    },
-                    set: function (newValue) {
-                        // Instead of letting other scripts like jQuery
-                        // overwrite our handler completely, let's overwrite
-                        // the *other* handler, which we'll call after doing
-                        // our thing.
-                        otherOrscHandler = newValue;
-                    },
-                });
+
+                if (canConfigureXhrOrsc) {
+                    Object.defineProperty(this, 'onreadystatechange', {
+                        configurable: false,
+                        enumerable: false,
+                        get: function () {
+                            // It seems that this doesn't actually get called,
+                            // perhaps since the native XMLHttpRequest.send
+                            // does some fancy native method calling thing?
+                            //
+                            // Let's return something just in case.
+                            return scc;
+                        },
+                        set: function (newValue) {
+                            // Instead of letting other scripts like jQuery
+                            // overwrite our handler completely, let's
+                            // overwrite the *other* handler, which we'll call
+                            // after doing our thing.
+                            otherOrscHandler = newValue;
+                        },
+                    });
+                } else {
+                    // TODO: enable some kind of fall-back behavior?
+                }
             }
 
             try {
@@ -417,7 +445,7 @@ window.utrelogin.postLogin = function(){
                 this._current_error = err;
             } finally {
                 // firefox doesn't fire on synchronous calls, but we need scc called
-                if (!(this._async || sc_complete)){
+                if (!(this._async || sc_complete)) {
                     no_call = true; // because user code
                     scc();
                 }
