@@ -31,6 +31,8 @@ can fork this public repo.
   * Optional: A `UTDirectContext` class
 
 ## Changelog
+* v1.3.1
+  * Fixing a bug in v1.3
 * v1.3:
   * Only attempting to modify property descriptors of xhr.onreadystatechange if
     supported by the browser. Safari makes xhr.onreadystatechange
@@ -57,7 +59,7 @@ named 'extra', you can use these `svn:externals` parameters:
 
 > path: extra/ut_relogin
 
-> URL: https://github.com/UT-Austin-FIS/ut_relogin/tags/v1.3/ut_relogin
+> URL: https://github.com/UT-Austin-FIS/ut_relogin/tags/v1.3.1/ut_relogin
 
 Then, install it into your Django project:
 
