@@ -364,7 +364,6 @@ window.utrelogin.postLogin = function(){
 
             function startLogin(){
                 var $d = createAndShowDialog();
-                $dialog = $d;
                 window.utrelogin.addPostLoginCallback(function() {
                     if (opts.autoCloseDialog) {
                         destroyAndHideLoginDialog($d);
