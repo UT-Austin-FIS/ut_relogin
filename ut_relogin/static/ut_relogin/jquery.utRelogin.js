@@ -387,7 +387,16 @@ window.utrelogin.postLogin = function(){
                     // Add a listener that opens the UTLogin window after the
                     // user clicks the special button, which we now show.
                     var $windowBtn = $d.find('#open-utrelogin-window');
-                    $windowBtn.on('click', openWindow);
+                    $windowBtn.on('click', function() {
+                        $(this).hide();
+                        reloginWindow = openWindow();
+                        if (!reloginWindow) {
+                            // just give up at this point
+                            $d.find('p').text(
+                                'Unable to open UTLogin window. Please reload this page.'
+                            );
+                        }
+                    });
                     $windowBtn.show();
                 }
             }
