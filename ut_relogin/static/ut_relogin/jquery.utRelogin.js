@@ -26,7 +26,6 @@
  *     $jqUtRelogin.utRelogin({
  *         popupUrl: 'path/to/relogin/page.html',
  *         popupOptions: 'options to window.open (see below)',
- *         showDialog: true,
  *         autoCloseDialog: false,
  *         formProtectSelector: 'form[method=post]'
  *         formProtectUrl: 'path/to/any/page.html',
@@ -119,7 +118,6 @@ window.utrelogin.postLogin = function(){
         'popupUrl': '/',
         'popupOptions': 'toolbar=yes,scrollbars=yes,resizable=yes,' +
                         'dependent=yes,height=500,width=800',
-        'showDialog': true,
         'autoCloseDialog': false,
         'formProtectSelector': 'form[method=post]',
         'formProtectUrl': '/',
@@ -279,12 +277,13 @@ window.utrelogin.postLogin = function(){
             var $contentDiv = $([
                 '<div>',
                 '<div>',
-                '<button>Close</button>',
+                '<button id="close-utrelogin-dialog">Close</button>',
                 '<p>',
                 'Your session expired after 60 minutes of inactivity. ',
                 'Use the UTLogin page to return to the application.',
                 '</p>',
                 '</div>',
+                '<button id="open-utrelogin-window">Open UTLogin page</button>',
                 '</div>'
             ].join(''));
             $contentDiv.css({
@@ -303,10 +302,15 @@ window.utrelogin.postLogin = function(){
                 'margin-bottom': '5px',
                 'padding-bottom': '5px'
             });
-            $contentDiv.find('button').css({
+            $contentDiv.find('#close-utrelogin-dialog').css({
                 'font-weight': 'normal',
                 'float': 'right',
                 'display': 'block'
+            });
+            $contentDiv.find('#open-utrelogin-window').css({
+                'font-weight': 'normal',
+                'float': 'left',
+                'display': 'none'
             });
 
             $dialog.append($dialogBackground);
@@ -331,7 +335,7 @@ window.utrelogin.postLogin = function(){
 
             $(window).keydown(escapeHandler);
 
-            $contentDiv.find('button').click(function() {
+            $contentDiv.find('#close-utrelogin-dialog').click(function() {
                 destroyAndHideLoginDialog($dialog);
             });
 
@@ -359,19 +363,34 @@ window.utrelogin.postLogin = function(){
             var otherOrscHandler;
 
             function startLogin(){
-                if (opts.showDialog) {
-                    var $d = createAndShowDialog();
-                    window.utrelogin.addPostLoginCallback(function() {
-                        if (opts.autoCloseDialog) {
-                            destroyAndHideLoginDialog($d);
-                        } else {
-                            $d.find('p').text(
-                                'Login successful. Repeat your last action.'
-                            );
-                        }
-                    });
+                var $d = createAndShowDialog();
+                $dialog = $d;
+                window.utrelogin.addPostLoginCallback(function() {
+                    if (opts.autoCloseDialog) {
+                        destroyAndHideLoginDialog($d);
+                    } else {
+                        $d.find('p').text(
+                            'Login successful. Repeat your last action.'
+                        );
+                    }
+                });
+                // window.open() calls don't work in Safari unless initiated by
+                // a user click. Detect this case by looking at the return
+                // value of window.open, which is a Window object for
+                // successful opens in the same domain, an Object object for
+                // cross-domain opens, and null or undefined otherwise.
+                var openWindow = function() {
+                    return window.open(
+                        opts.popupUrl, 'UTReloginWindow', opts.popupOptions);
+                };
+                var reloginWindow = openWindow();
+                if (!reloginWindow) {
+                    // Add a listener that opens the UTLogin window after the
+                    // user clicks the special button, which we now show.
+                    $windowBtn = $d.find('#open-utrelogin-window');
+                    $windowBtn.on('click', openWindow);
+                    $windowBtn.show();
                 }
-                window.open(opts.popupUrl, 'UTReloginWindow', opts.popupOptions);
             }
 
             function state_change_closure(self, old){

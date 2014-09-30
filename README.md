@@ -169,12 +169,8 @@ The configuration options you can pass to $.utRelogin are the following:
 * `popupOptions`
   * options to pass to `window.open()` for controlling the login browser window
   * *default*: `'toolbar=yes,scrollbars=yes,resizable=yes,dependent=yes,height=500,width=800'`
-* `showDialog`
-  * whether to show a dialog on the parent page when opening the login window
-  * *default*: `true`
 * `autoCloseDialog`
-  * whether to automatically close the dialog on the parent page after logging in, if
-    `showDialog` is `true`
+  * whether to automatically close the dialog on the parent page after logging in
   * *default*: `false`
 * `formProtectSelector`
   * the jQuery selector to which to attach "submit" listeners - the listener does
