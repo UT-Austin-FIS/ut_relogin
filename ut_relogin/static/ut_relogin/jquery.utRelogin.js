@@ -10,7 +10,7 @@
  * @author Eric Petersen <epetersen@austin.utexas.edu>
  * @author Adam Connor <adam.conor@austin.utexas.edu>
  * @author Todd Graves <tgraves@austin.utexas.edu>
- * @version 2.0.0
+ * @version 1.4.0 (in "safari" branch)
  * @requires jQuery 1.7+ (developed against 1.11.1)
  *
  * Usage:
@@ -212,11 +212,16 @@ window.utrelogin.postLogin = function(){
             if (opts.formProtectRetry) {
                 window.utrelogin.addPostLoginCallback(submitForm);
             }
-            $.ajax({
-                type: 'GET',
-                url: opts.formProtectUrl,
-                success: submitForm,
-            });
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', opts.formProtectUrl, true);
+            xhr.onreadystatechange = function(){
+                if (this.readyState === 4) {
+                    if (this.status === 200) {
+                        submitForm();
+                    }
+                }
+            };
+            xhr.send();
         }
         function bindHandlers(){
             if (opts.formProtectSelector !== ''){
