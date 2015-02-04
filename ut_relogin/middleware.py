@@ -39,5 +39,8 @@ class UtReloginHeadTagMiddleware(object):
         if 'html' in response['Content-Type'].lower():
             if self.tags is None:
                 self.tags = self.get_head_tag_replacement()
-            response.content = response.content.replace(u'<head>', self.tags, 1)
+            encoding = getattr(settings, 'DEFAULT_CHARSET', 'utf-8')
+            content = response.content.decode(encoding).replace(
+                u'<head>', self.tags, 1)
+            response.content = content.encode(encoding)
         return response

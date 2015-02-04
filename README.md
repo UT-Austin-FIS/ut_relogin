@@ -31,6 +31,11 @@ can fork this public repo.
   * Optional: A `UTDirectContext` class
 
 ## Changelog
+* v1.3.2
+  * Adding a `__version__` attribute to the module
+  * Decoding `response.content` using `settings.DEFAULT_CHARSET` before
+    replacing the `<head>` tag in middleware. Should allow ut_relogin to work
+    with pages that aren't valid ASCII.
 * v1.3.1
   * Fixing a bug in v1.3
 * v1.3:
@@ -59,7 +64,7 @@ named 'extra', you can use these `svn:externals` parameters:
 
 > path: extra/ut_relogin
 
-> URL: https://github.com/UT-Austin-FIS/ut_relogin/tags/v1.3.1/ut_relogin
+> URL: https://github.com/UT-Austin-FIS/ut_relogin/tags/v1.3.2/ut_relogin
 
 Then, install it into your Django project:
 
