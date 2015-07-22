@@ -8,9 +8,9 @@ _TIMESTAMP = datetime.now().strftime('%Y%m%d%H%M')
 
 TAGS_TEMPLATE = """
 <head>
-    <script src="{static_url}ut_relogin/jquery-1.11.1.min.js{cache_bust}"></script>
-    <script src="{static_url}ut_relogin/jquery.utRelogin.js{cache_bust}"></script>
-    <script>
+    <script type="text/javascript" src="{static_url}ut_relogin/jquery-1.11.1.min.js{cache_bust}"></script>
+    <script type="text/javascript" src="{static_url}ut_relogin/jquery.utRelogin.js{cache_bust}"></script>
+    <script type="text/javascript">
         var $jqUtRelogin = jQuery.noConflict(true);
         $jqUtRelogin.utRelogin({{
             'popupUrl': '{popup_url}',
