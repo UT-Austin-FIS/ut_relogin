@@ -149,9 +149,9 @@ Here's what it should look like:
 <head>
   <!-- ... -->
 
-  <script src="url/to/your/copy/of/jquery-1.11.1.min.js"></script>
-  <script src="url/to/your/copy/of/jquery.utRelogin.js"></script>
-  <script>
+  <script type="text/javascript" src="url/to/your/copy/of/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="url/to/your/copy/of/jquery.utRelogin.js"></script>
+  <script type="text/javascript">
     var $jqUtRelogin = jQuery.noConflict(true);
     $jqUtRelogin.utRelogin({
         'popupUrl': 'url/to/your/redirect/page.html',

@@ -19,9 +19,9 @@
  * with a stand-alone version of jQuery, since its primary purpose is to modify
  * the browser's native XMLHttpRequest object. Therefore, usage is simple:
  *
- * <script src="path/to/jquery-1.11.1.min.js"></script>
- * <script src="path/to/jquery.utRelogin.js"></script>
- * <script>
+ * <script type="text/javascript" src="path/to/jquery-1.11.1.min.js"></script>
+ * <script type="text/javascript" src="path/to/jquery.utRelogin.js"></script>
+ * <script type="text/javascript">
  *     $jqUtRelogin = $.noConflict(true);
  *     $jqUtRelogin.utRelogin({
  *         popupUrl: 'path/to/relogin/page.html',
