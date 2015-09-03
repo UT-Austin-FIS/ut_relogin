@@ -31,6 +31,8 @@ can fork this public repo.
   * Optional: A `UTDirectContext` class
 
 ## Changelog
+* v1.4.0
+  * Adding `type="text/javascript"` to all `script` tags
 * v1.3.2
   * Adding a `__version__` attribute to the module
   * Decoding `response.content` using `settings.DEFAULT_CHARSET` before
