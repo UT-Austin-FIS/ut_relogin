@@ -10,6 +10,7 @@
  * @author Eric Petersen <epetersen@austin.utexas.edu>
  * @author Adam Connor <adam.conor@austin.utexas.edu>
  * @author Todd Graves <tgraves@austin.utexas.edu>
+ * @author Jason Oliver <jeoliver@austin.utexas.edu>
  * @version 2.0.0
  * @requires jQuery 1.7+ (developed against 1.11.1)
  *
