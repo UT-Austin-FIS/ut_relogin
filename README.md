@@ -26,11 +26,14 @@ can fork this public repo.
       made with jQuery, or other frameworks that override onreadystatechange
       **after** calling xhr.send()
 * `ut_relogin`, the Django app:
-  * Python 2.6+
-  * Django 1.4+
+  * Python 2.7+
+  * Django 1.8+
   * Optional: A `UTDirectContext` class
 
 ## Changelog
+* v1.4.0
+  * Making changes to reduce our support to Django 1.8+ (and therefore Python 2.7+)
+  * Adding `type="text/javascript"` to all `script` tags
 * v1.3.2
   * Adding a `__version__` attribute to the module
   * Decoding `response.content` using `settings.DEFAULT_CHARSET` before
@@ -149,9 +152,9 @@ Here's what it should look like:
 <head>
   <!-- ... -->
 
-  <script src="url/to/your/copy/of/jquery-1.11.1.min.js"></script>
-  <script src="url/to/your/copy/of/jquery.utRelogin.js"></script>
-  <script>
+  <script type="text/javascript" src="url/to/your/copy/of/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="url/to/your/copy/of/jquery.utRelogin.js"></script>
+  <script type="text/javascript">
     var $jqUtRelogin = jQuery.noConflict(true);
     $jqUtRelogin.utRelogin({
         'popupUrl': 'url/to/your/redirect/page.html',
@@ -165,7 +168,7 @@ Here's what it should look like:
 
 Options
 =======
-The configuration options you can pass to $.utRelogin are the following:
+The configuration options you can pass to `$.utRelogin` are the following:
 
 * `popupUrl`
   * the URL to open in the login window, to which UTLogin will redirect the
@@ -219,10 +222,10 @@ Explanation/Justification
 Before the transition to [UTLogin](http://www.utexas.edu/its/utlogin/), under
 [Central Web Authentication](http://www.utexas.edu/its/utlogin/Compare%20to%20CWA)
 (CWA), AJAX requests that were sent with an invalid session received 200-status
-responses from the CWA machinery. Despite being a "success" in HTTP terms,
+responses from the CWA machinery. Because they were a "success" in HTTP terms,
 these responses could be inspected for clues indicating that they in fact
 came from failed authentication, instead of containing the intended data.
-FIS has a jQuery plugin called `utRelogin` that did just that.
+FIS had a jQuery plugin called `utRelogin` that did just that.
 
 Under UTLogin, however, requests with expired sessions are redirected to a
 central server on a different subdomain, which the browser cannot follow

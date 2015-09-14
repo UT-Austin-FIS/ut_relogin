@@ -10,6 +10,7 @@
  * @author Eric Petersen <epetersen@austin.utexas.edu>
  * @author Adam Connor <adam.conor@austin.utexas.edu>
  * @author Todd Graves <tgraves@austin.utexas.edu>
+ * @author Jason Oliver <jeoliver@austin.utexas.edu>
  * @version 2.0.0
  * @requires jQuery 1.7+ (developed against 1.11.1)
  *
@@ -19,9 +20,9 @@
  * with a stand-alone version of jQuery, since its primary purpose is to modify
  * the browser's native XMLHttpRequest object. Therefore, usage is simple:
  *
- * <script src="path/to/jquery-1.11.1.min.js"></script>
- * <script src="path/to/jquery.utRelogin.js"></script>
- * <script>
+ * <script type="text/javascript" src="path/to/jquery-1.11.1.min.js"></script>
+ * <script type="text/javascript" src="path/to/jquery.utRelogin.js"></script>
+ * <script type="text/javascript">
  *     $jqUtRelogin = $.noConflict(true);
  *     $jqUtRelogin.utRelogin({
  *         popupUrl: 'path/to/relogin/page.html',
