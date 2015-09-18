@@ -31,10 +31,10 @@ can fork this public repo.
   * Optional: A `UTDirectContext` class
 
 ## Changelog
-* v1.4.0
+* v1.4.0 (2015-09-18)
   * Making changes to reduce our support to Django 1.8+ (and therefore Python 2.7+)
   * Adding `type="text/javascript"` to all `script` tags
-* v1.3.2
+* v1.3.2 (2015-02-04)
   * Adding a `__version__` attribute to the module
   * Decoding `response.content` using `settings.DEFAULT_CHARSET` before
     replacing the `<head>` tag in middleware. Should allow ut_relogin to work
