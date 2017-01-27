@@ -79,11 +79,11 @@ setup(
     name='ut-relogin',
     version=version,
     url='https://github.com/UT-Austin-FIS/ut_relogin',
-    license='',  # FIXME
+    license='MIT',
     description='Relogin functionality for AJAX and POST requests under UTLogin.',
     long_description=read_md('README.md'),
-    author='',  # FIXME
-    author_email='',  # FIXME
+    author='Financial Information Systems',
+    author_email='oa.it-infrastructure@austin.utexas.edu',
     packages=get_packages('ut_relogin'),
     package_data=get_package_data('ut_relogin'),
     install_requires=[],
