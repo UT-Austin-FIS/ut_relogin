@@ -9,7 +9,7 @@ def pytest_configure():
     )
 
     settings.configure(
-        UT_RELOGIN_CONTEXT='django.template.context.RequestContext',
+        UT_RELOGIN_CONTEXT='django.template.context.RequestContext',  # FIXME?
 
         ALLOWED_HOSTS=['testserver'],
         DEBUG_PROPAGATE_EXCEPTIONS=True,

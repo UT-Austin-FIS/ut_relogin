@@ -17,4 +17,4 @@ class TestMiddleware(TestCase):
         with self.modify_settings(MIDDLEWARE_CLASSES={'append': 'ut_relogin.middleware.UtReloginHeadTagMiddleware'},
                                   MIDDLEWARE={'append': 'ut_relogin.middleware.UtReloginHeadTagMiddleware'}):
             resp = self.client.get('/')
-            self.assertContains(resp, '/static/ut_relogin/jquery.utRelogin.js', count=1)
+            self.assertContains(resp, '/static/ut_relogin/jquery.utRelogin.js', count=1)  # FIXME
