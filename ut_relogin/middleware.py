@@ -3,6 +3,12 @@ from datetime import datetime
 from django.conf import settings
 from django.core.urlresolvers import reverse
 
+try:
+    from django.utils.deprecation import MiddlewareMixin
+    middleware_parent_class = MiddlewareMixin
+except ImportError:
+    middleware_parent_class = object
+
 # module-level timestamp for cache-busting
 _TIMESTAMP = datetime.now().strftime('%Y%m%d%H%M')
 
@@ -22,7 +28,7 @@ TAGS_TEMPLATE = """
 """
 
 
-class UtReloginHeadTagMiddleware(object):
+class UtReloginHeadTagMiddleware(middleware_parent_class):
     tags = None
 
     def get_head_tag_replacement(self):

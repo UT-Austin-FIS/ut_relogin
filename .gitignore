@@ -54,3 +54,6 @@ docs/_build/
 
 # Other
 *.swp
+
+# Jetbrains
+.idea/
