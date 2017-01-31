@@ -26,11 +26,15 @@ can fork this public repo.
       made with jQuery, or other frameworks that override onreadystatechange
       **after** calling xhr.send()
 * `ut_relogin`, the Django app:
-  * Python 2.7+
-  * Django 1.8+
+  * Python 2.7, 3.5
+  * Django 1.8, 1.9, 1.10
   * Optional: A `UTDirectContext` class
 
 ## Changelog
+* v1.5.0 (January 2017, work-in-progress)
+  * Enable Python packaging.
+  * Adding Django 1.9, 1.10 and Python 3.5 compatibility.
+  * Adding tests with tox.
 * v1.4.0 (2015-09-18)
   * Making changes to reduce our support to Django 1.8+ (and therefore Python 2.7+)
   * Adding `type="text/javascript"` to all `script` tags
@@ -60,7 +64,19 @@ can fork this public repo.
 Setup - PyPE/Django
 ===================
 
-To include this app in your PyPE project, simply pull it into your project via
+You can obtain `ut_relogin` with pip or SVN externals.
+
+Pip
+---
+
+Versions 1.5.0+ of this library will be published on [UT's
+Artifactory](https://artifacts.austin.utexas.edu). Add it to your project's
+`requirements.txt` file like any other PyPI package.
+
+Subversion Externals
+--------------------
+
+To include this app in your PyPE project, pull it into your project via
 `svn:externals` and place it on your `PYTHONPATH`. For example, if you're using
 the `utdirect.utils.setup_extra()` functionality with a project-level folder
 named 'extra', you can use these `svn:externals` parameters:
@@ -68,6 +84,9 @@ named 'extra', you can use these `svn:externals` parameters:
 > path: extra/ut_relogin
 
 > URL: https://github.com/UT-Austin-FIS/ut_relogin/tags/v1.3.2/ut_relogin
+
+Installation
+------------
 
 Then, install it into your Django project:
 
@@ -136,10 +155,10 @@ If you look at the middleware in `ut_relogin/middleware.py`, you'll see the
 `<script>` tags necessary to add this plugin to your own web application in
 whatever language you're using (webAgent, PHP, Java, etc.).
 
-Ideally, you'd include this repo with `svn:externals` if you're using Subversion,
-or perhaps with subtree merges if you're using git. If you're adding `ut_relogin`
-to a webAgent application, you'll just want to download a tagged version of the
-relevant JavaScript files and add them to your source directory.
+Ideally, you'd include this repo with `svn:externals` if you're using
+Subversion, or perhaps with submodules if you're using git. If you're adding
+`ut_relogin` to a webAgent application, you'll just want to download a tagged
+version of the relevant JavaScript files and add them to your source directory.
 
 In addition to getting the two source files and the calling script into your
 application, you will probably also want to create a web page to have UTLogin
