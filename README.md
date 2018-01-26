@@ -31,6 +31,10 @@ can fork this public repo.
   * Optional: A `UTDirectContext` class
 
 ## Changelog
+* v1.4.1 (2018-01-26)
+  * Tagged version of v1.5.0 work-in-progress
+  * Added Django 1.11 and Python 3.6
+  * Nothing is yet in Artifiactory
 * v1.5.0 (January 2017, work-in-progress)
   * Enable Python packaging.
   * Adding Django 1.9, 1.10 and Python 3.5 compatibility.
