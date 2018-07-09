@@ -87,7 +87,7 @@ named 'extra', you can use these `svn:externals` parameters:
 
 > path: extra/ut_relogin
 
-> URL: https://github.com/UT-Austin-FIS/ut_relogin/tags/v1.3.2/ut_relogin
+> URL: https://github.com/UT-Austin-FIS/ut_relogin/tags/v1.4.1/ut_relogin
 
 Installation
 ------------
